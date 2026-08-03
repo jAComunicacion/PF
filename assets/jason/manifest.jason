@@ -1,0 +1,21 @@
+{
+  "name": "Personal Count",
+  "short_name": "PersCount",
+  "description": "Tu asistente personal de finanzas con estética neon.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#00ffff",
+  "icons": [
+    {
+      "src": "assets/img/avatar.jpg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    },
+    {
+      "src": "assets/img/avatar.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    }
+  ]
+}

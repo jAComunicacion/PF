@@ -1,0 +1,42 @@
+function updateMetas() {
+    const budgetValueEl = document.getElementById('monthly-budget-value');
+    const budgetFillEl = document.getElementById('budget-fill');
+    const budgetStatusEl = document.getElementById('budget-status');
+
+    if (!budgetValueEl || !budgetFillEl || !budgetStatusEl) return;
+
+    const budget = window.monthlyBudget || 0;
+
+    // Calcular gastos del mes actual
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const monthlyExpenses = (window.transactions || [])
+        .filter(t => t.type === 'expense')
+        .filter(t => {
+            const d = new Date(t.date);
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+        })
+        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+    // Actualizar UI
+    budgetValueEl.textContent = formatCurrency(budget);
+
+    let percentage = 0;
+    if (budget > 0) {
+        percentage = Math.min(100, Math.round((monthlyExpenses / budget) * 100));
+    }
+
+    budgetFillEl.style.width = `${percentage}%`;
+    budgetStatusEl.textContent = `Gastado: ${formatCurrency(monthlyExpenses)} de ${formatCurrency(budget)}`;
+
+    // Cambiar color si se supera el presupuesto
+    if (percentage >= 90) {
+        budgetFillEl.style.background = 'linear-gradient(90deg, #ffaa00, #ff0066)';
+    } else {
+        budgetFillEl.style.background = 'linear-gradient(90deg, #00ffff, #00ff88)';
+    }
+}
+
+window.updateMetas = updateMetas;

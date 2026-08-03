@@ -1,0 +1,209 @@
+/* Toast Container - Top Center */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+}
+
+/* Toast Item */
+.toast {
+    background: rgba(13, 13, 31, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.toast-success {
+    border-left: 4px solid #00ff88;
+}
+
+.toast-error {
+    border-left: 4px solid #ff0066;
+}
+
+.toast-info {
+    border-left: 4px solid #00ffff;
+}
+
+.toast-icon {
+    font-size: 18px;
+}
+
+.toast-message {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Micro-interactions for Buttons */
+button:active {
+    transform: scale(0.95);
+}
+
+/* Screen Transitions */
+.screen {
+    /* Set up for transition, handled by JS class toggling or simple CSS animation */
+    /* Keyframes are already in estilos.css (fadeIn) */
+}
+
+/* Profile Edit Indicator */
+.greeting {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.greeting:hover {
+    text-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+}
+
+.greeting::after {
+    content: '✎';
+    font-size: 14px;
+    position: absolute;
+    top: -5px;
+    right: -15px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #00ffff;
+}
+
+.greeting:hover::after {
+    opacity: 1;
+}
+
+/* Export Buttons Styling */
+.export-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    /* Space from filter dropdown */
+}
+
+.export-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    /* Glass effect */
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* PDF Specific Hover - Red shine */
+.export-btn:first-child:hover {
+    border-color: #ff4757;
+    background: rgba(255, 71, 87, 0.15);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+}
+
+/* Backup Specific Hover - Green shine */
+.export-btn:last-child:hover {
+    border-color: #2ed573;
+    background: rgba(46, 213, 115, 0.15);
+    box-shadow: 0 0 15px rgba(46, 213, 115, 0.4);
+}
+
+/* Chart Range Filter - Select as Button */
+#chart-range-filter {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    color: #00ffff;
+    padding: 8px 30px 8px 15px;
+    /* Extra padding right for arrow */
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+
+    /* Custom Arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='18' height='18' fill='%2300ffff'%3E%3Cpath d='M12 16L6 10H18L12 16Z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+#chart-range-filter:hover {
+    background-color: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    border-color: #00ffff;
+}
+
+#chart-range-filter:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+#chart-range-filter option {
+    background: #0d0d1f;
+    color: #ffffff;
+    padding: 10px;
+}
+
+/* Edit Button (Gear) */
+.edit-btn {
+    background: transparent;
+    border: none;
+    color: #00ffff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.edit-btn:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: rotate(90deg);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Phosphor Icons Base Sizing */
+.ph {
+    display: inline-block;
+    vertical-align: middle;
+}

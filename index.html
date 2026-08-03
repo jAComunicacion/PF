@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <title>Personal Count</title>
+    <link rel="stylesheet" href="assets/css/estilos.css">
+    <!-- Enlace al nuevo archivo CSS de íconos que crearemos -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+    <!-- Phosphor Icons (Modern, clean, free) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="manifest" href="assets/jason/manifest.jason">
+    <meta name="theme-color" content="#00ffff">
+    <!-- Las fuentes deben estar en la carpeta assets/fonts/ -->
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="dashboard-screen" class="screen active" data-screen="dashboard">
+            <div class="profile-section">
+                <div class="profile-photo" id="profile-btn" style="cursor: pointer;">
+                    <img src="assets/img/avatar.jpg" alt="Profile" id="profile-img">
+                </div>
+                <div class="profile-info">
+                    <h1 class="greeting" title="Clic para editar nombre">¡Hola, <span id="user-name">Invitado</span>!
+                    </h1>
+                    <p class="subtitle">Bienvenido de nuevo</p>
+                </div>
+            </div>
+            <div class="balance-card">
+                <p class="balance-label">Saldo Total</p>
+                <!-- ID corregido a current-balance para coincidir con JS -->
+                <h2 class="balance-amount" id="current-balance">$0.00</h2>
+                <!-- balance-change se actualizará con JS, pero la lógica de % de cambio no estaba en tu JS -->
+                <p class="balance-change">+0%</p>
+            </div>
+
+            <div class="action-buttons">
+                <!-- Data attributes para pasar tipo/categoría -->
+                <!-- Data attributes para pasar tipo/categoría -->
+                <button class="action-btn" id="btn-pagar">
+                    <span class="btn-icon"><i class="ph ph-credit-card"></i></span>
+                    <span class="btn-text">Pagar</span>
+                </button>
+                <button class="action-btn" id="btn-ingresos">
+                    <span class="btn-icon"><i class="ph ph-money"></i></span>
+                    <span class="btn-text">Ingresos</span>
+                </button>
+                <button class="action-btn" id="btn-transferir">
+                    <span class="btn-icon"><i class="ph ph-arrows-left-right"></i></span>
+                    <span class="btn-text">Transferir</span>
+                </button>
+                <button class="action-btn" id="btn-invertir">
+                    <span class="btn-icon"><i class="ph ph-trend-up"></i></span>
+                    <span class="btn-text">Invertir</span>
+                </button>
+            </div>
+            <div class="health-section">
+                <p class="health-label">Estado de Mis Finanzas</p>
+                <div class="health-bar">
+                    <div class="health-fill" id="health-fill"></div>
+                </div>
+                <p class="health-percentage" id="health-percentage">0%</p>
+            </div>
+
+            <div class="goals-section">
+                <div class="section-header">
+                    <p class="health-label">Metas Mensuales</p>
+                    <button class="edit-btn" onclick="openMetasModal()"><i class="ph ph-gear"></i></button>
+                </div>
+                <div class="budget-card">
+                    <div class="budget-info">
+                        <span class="budget-label">Presupuesto Mensual</span>
+                        <span class="budget-value" id="monthly-budget-value">$0.00</span>
+                    </div>
+                    <div class="health-bar budget-bar">
+                        <div class="health-fill budget-fill" id="budget-fill"></div>
+                    </div>
+                    <p class="budget-status" id="budget-status">Gastado: $0.00 de $0.00</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="transactions-screen" class="screen" data-screen="transactions">
+            <div class="screen-header">
+                <h2 class="screen-title">Transacciones Recientes</h2>
+                <button class="add-btn" onclick="openTransactionModal('expense', 'Gasto')">+</button>
+            </div>
+            <div class="filter-section">
+                <select id="category-filter" onchange="filterTransactions()">
+                    <option value="all">Todas las categorías</option>
+                    <option value="Alimentación">Alimentación</option>
+                    <option value="Transporte">Transporte</option>
+                    <option value="Entretenimiento">Entretenimiento</option>
+                    <option value="Servicios">Servicios</option>
+                    <option value="Otros">Otros</option>
+                    <option value="Ahorro">Ahorro</option>
+                    <option value="Inversión">Inversión</option>
+                    <option value="Pago">Pago</option>
+                    <option value="Transferencia">Transferencia</option>
+                </select>
+                <div class="export-actions">
+                    <button class="export-btn" onclick="exportToPDF()" title="Exportar PDF">📄 PDF</button>
+                    <button class="export-btn" onclick="backupToJSON()" title="Copia de Seguridad">💾 Backup</button>
+                </div>
+            </div>
+            <!-- ID añadido para inyectar transacciones con JS -->
+            <div class="transactions-list" id="transactions-list">
+                <!-- Las transacciones se renderizan aquí -->
+            </div>
+        </div>
+
+        <!-- Pantalla de Gráficos -->
+        <div id="charts-screen" class="screen" data-screen="charts">
+            <div class="screen-header">
+                <h2 class="screen-title">Gastos por Categoría</h2>
+                <select id="chart-range-filter" onchange="changeChartFilter(this.value)">
+                    <option value="month">Este Mes</option>
+                    <option value="all">Histórico</option>
+                </select>
+            </div>
+            <div class="chart-container">
+                <!-- Se inyecta con Chart.js -->
+            </div>
+            <div class="chart-legend" id="chart-legend"></div>
+        </div>
+
+        <nav class="bottom-nav">
+            <!-- Data attributes añadidos a los botones de navegación -->
+            <!-- Data attributes añadidos a los botones de navegación -->
+            <button class="nav-btn active" data-screen="dashboard" onclick="showScreen('dashboard')">
+                <span class="nav-icon"><i class="ph ph-house"></i></span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-btn" data-screen="transactions" onclick="showScreen('transactions')">
+                <span class="nav-icon"><i class="ph ph-list-dashes"></i></span>
+                <span class="nav-label">Transacciones</span>
+            </button>
+            <button class="nav-btn" data-screen="charts" onclick="showScreen('charts')">
+                <span class="nav-icon"><i class="ph ph-chart-pie-slice"></i></span>
+                <span class="nav-label">Gráficas</span>
+            </button>
+        </nav>
+
+        <!-- El Modal de Transacción -->
+        <div id="transaction-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Nueva Transacción</h3>
+                    <button class="close-btn" onclick="closeTransactionModal()">×</button>
+                </div>
+                <!-- Eliminado el onsubmit del form, se gestiona con addEventListener en JS -->
+                <form id="transaction-form">
+                    <input type="hidden" id="transaction-type" value="expense">
+                    <div class="form-group">
+                        <label for="transaction-name">Descripción</label>
+                        <input type="text" id="transaction-name" required placeholder="Ej: Supermercado">
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-amount">Monto</label>
+                        <input type="number" id="transaction-amount" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-category">Categoría</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="transaction-category" onchange="handleCategoryChange(this.value)"
+                                style="flex: 1;">
+                                <!-- Dynamic -->
+                            </select>
+                            <button type="button" class="add-cat-btn" onclick="addNewCategory()"
+                                title="Agregar nueva categoría">+</button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="subcategory-group" style="display: none;">
+                        <label for="transaction-subcategory">Subcategoría</label>
+                        <select id="transaction-subcategory">
+                            <!-- Inyectado dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-date">Fecha</label>
+                        <input type="date" id="transaction-date" required>
+                    </div>
+                    <button type="submit" class="submit-btn" id="transaction-submit-btn">Agregar Transacción</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- CSS Adicional -->
+    <link rel="stylesheet" href="assets/css/dynamic-styles.css">
+    <link rel="stylesheet" href="assets/css/add-category.css">
+
+    <!-- Metas Modal -->
+    <div id="metas-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="metas-modal-title">Configurar Metas</h3>
+                <button class="close-btn" onclick="closeMetasModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="metas-form">
+                    <div class="form-group">
+                        <label for="monthly-budget-input">Presupuesto Mensual (ARS)</label>
+                        <input type="number" id="monthly-budget-input" placeholder="Ej: 50000" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Guardar Meta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Local Database -->
+    <script src="assets/js/vendors/dexie.js"></script>
+    <script src="assets/js/vendors/chart.js"></script>
+    <script src="assets/js/data/db.js"></script>
+    <script src="assets/js/utils/globals.js"></script>
+    <script src="assets/js/data/categoryService.js"></script>
+    <script src="assets/js/data/seedCategories.js"></script>
+    <script src="assets/js/utils/formatCurrency.js"></script>
+    <script src="assets/js/setup/setupAuth.js"></script>
+    <script src="assets/js/utils/getCategoryIcon.js"></script>
+    <script src="assets/js/data/calculateBalance.js"></script>
+    <script src="assets/js/data/calculateHealthScore.js"></script>
+    <script src="assets/js/ui/openTransactionModal.js"></script>
+    <script src="assets/js/ui/closeTransactionModal.js"></script>
+    <script src="assets/js/ui/handleCategoryChange.js"></script>
+    <script src="assets/js/ui/handleAddCategory.js"></script>
+    <script src="assets/js/data/transactionPayload.js"></script>
+    <script src="assets/js/data/addTransaction.js"></script>
+    <script src="assets/js/data/updateTransaction.js"></script>
+    <script src="assets/js/data/deleteTransaction.js"></script>
+    <script src="assets/js/ui/renderTransactions.js"></script>
+    <script src="assets/js/utils/filterTransactions.js"></script>
+    <script src="assets/js/data/saveTransactions.js"></script>
+    <script src="assets/js/ui/updateDashboard.js"></script>
+    <script src="assets/js/ui/showScreen.js"></script>
+    <script src="assets/js/setup/setupNavigationListeners.js"></script>
+    <script src="assets/js/setup/setupFormListeners.js"></script>
+    <script src="assets/js/setup/setupActionButtons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="assets/js/ui/renderLegend.js"></script>
+    <script src="assets/js/ui/renderChart.js"></script>
+    <script src="assets/js/ui/openMetasModal.js"></script>
+    <script src="assets/js/ui/closeMetasModal.js"></script>
+    <script src="assets/js/data/addBudget.js"></script>
+    <script src="assets/js/ui/updateMetas.js"></script>
+    <script src="assets/js/utils/changeChartFilter.js"></script>
+    <script src="assets/js/export/exportToPDF.js"></script>
+    <script src="assets/js/export/backupToJSON.js"></script>
+    <script src="assets/js/ui/toast.js"></script>
+    <script src="assets/js/setup/initializeApp.js"></script>
+</body>
+
+</html>

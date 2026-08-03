@@ -1,0 +1,6 @@
+node_modules/
+.env
+.env.local
+.vercel
+personal_count_backup_*.json
+*.log
