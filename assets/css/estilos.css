@@ -160,6 +160,7 @@ select {
 .screen.active>*:nth-child(3) { animation-delay: .14s; }
 .screen.active>*:nth-child(4) { animation-delay: .20s; }
 .screen.active>*:nth-child(5) { animation-delay: .26s; }
+.screen.active>*:nth-child(6) { animation-delay: .32s; }
 
 @keyframes riseIn {
     from {
@@ -276,16 +277,19 @@ select {
 .balance-card::before {
     content: "";
     position: absolute;
-    right: -46px;
+    right: -58px;
     top: 50%;
     transform: translateY(-50%);
-    width: 260px;
-    height: 210px;
+    width: 340px;
+    height: 275px;
     background-image: url("../logos/IsoLogojAComunicacion.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    opacity: .22;
+    /* El isotipo es de trazo fino: a escala chica y opacidad baja las
+       líneas caen por debajo del píxel y desaparecen. Un outline necesita
+       tamaño y opacidad alta para leerse como marca de agua. */
+    opacity: .5;
     pointer-events: none;
     z-index: 0;
 }
@@ -509,6 +513,39 @@ select {
     color: var(--ink-mute);
     margin-top: 10px;
     font-variant-numeric: tabular-nums;
+}
+
+/* ==================== COLOFÓN DE MARCA ====================
+   Firma al pie del dashboard, separada por un filete: el gesto de una
+   pieza impresa. Discreta, pero presente. */
+.brand-mark {
+    display: flex;
+    justify-content: center;
+    padding-top: 24px;
+    margin-top: 8px;
+    border-top: 1px solid var(--rule);
+}
+
+.brand-mark img {
+    width: 132px;
+    max-width: 46%;
+    height: auto;
+    display: block;
+    opacity: .5;
+    transition: opacity .25s ease;
+}
+
+.brand-mark img:hover {
+    opacity: .85;
+}
+
+/* El logotipo viene en gris oscuro: sobre fondo oscuro hay que invertirlo
+   para que siga leyéndose */
+@media (prefers-color-scheme: dark) {
+    .brand-mark img {
+        filter: invert(1) brightness(1.6);
+        opacity: .42;
+    }
 }
 
 /* ==================== CABECERA DE PANTALLA ==================== */
@@ -1070,8 +1107,8 @@ select {
     }
 
     .balance-card::before {
-        width: 210px;
-        height: 170px;
-        right: -54px;
+        width: 280px;
+        height: 225px;
+        right: -64px;
     }
 }
