@@ -15,9 +15,6 @@ function updateDashboard() {
         healthFill.style.width = `${healthScore}%`;
         healthPercentageEl.textContent = `${healthScore}%`;
     }
-
-    healthPercentageEl.textContent = `${healthScore}%`;
-}
 }
 
 function triggerShine(selector) {

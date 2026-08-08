@@ -15,6 +15,28 @@ Configurar en Vercel (Project Settings → Environment Variables) y en un
 | `APP_PASSWORD` | Contraseña única de acceso a la app (v1, un solo usuario) | La elegís vos |
 | `SESSION_SECRET` | Firma las cookies de sesión | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
 
+A partir de Fase 1 (ingesta por email) se suman:
+
+| Variable | Para qué sirve | Valor |
+|---|---|---|
+| `IMAP_HOST` | Servidor de la casilla de ingesta | `a0171005.ferozo.com` |
+| `IMAP_PORT` | Puerto IMAP sobre SSL | `993` |
+| `IMAP_USER` | Casilla de ingesta | `movimientos@jacomunicacion.com.ar` |
+| `IMAP_PASSWORD` | Contraseña de esa casilla | Panel de Ferozo |
+| `INGEST_TOKEN` | Autoriza al cron a disparar la ingesta | `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"` |
+
+## Marca
+
+Archivos en `assets/logos/`. **El logo nunca se recompone con tipografía** —
+las letras "jA" escritas con una fuente no son el logo. Toda aparición de la
+marca usa uno de estos archivos:
+
+| Archivo | Qué es | Dónde va |
+|---|---|---|
+| `IsoLogojAComunicacion.png` | Isotipo en **outline** blanco, fondo transparente | Marcas de agua sobre fondos oscuros (hoy: tarjeta de saldo) |
+| `jacomunicacion.jpg` | Isotipo sólido, blanco sobre verde petróleo | Versión principal — favicon, ícono de app, avatar |
+| `LogusjAComunicacion.png` | Logotipo horizontal "jA Comunicacion" | Firmas, encabezados de documentos, export PDF |
+
 ## Base de datos
 
 1. Crear un proyecto en [Neon](https://neon.tech).
@@ -34,6 +56,27 @@ api/
   categories/index.js       # GET/POST — categorías (constraint UNIQUE)
   transactions/index.js     # GET/POST — transacciones
 ```
+
+## Despliegue y dominio
+
+La app vive en **Vercel**. URL de origen:
+`https://finanzas-xi-orcin.vercel.app`
+
+Dominio definitivo: **`finanzas.jacomunicacion.com.ar`**, en subdominio para
+dejar la raíz libre para el sitio del estudio.
+
+Se apunta con un **CNAME en la zona DNS** (Ferozo → Dominios → Zona DNS), no
+creando un subdominio en el hosting — eso lo apuntaría a Ferozo, no a Vercel:
+
+```
+Tipo:    CNAME
+Nombre:  finanzas
+Destino: el que indique Vercel (Settings → Domains), típicamente
+         cname.vercel-dns.com
+```
+
+**Los registros MX no se tocan.** El correo sigue en Ferozo y de eso depende
+la ingesta (ver `spec.md`, "Recepción de email").
 
 ## Instalar y testear
 

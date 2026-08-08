@@ -1,21 +1,18 @@
 {
   "name": "Personal Count",
   "short_name": "PersCount",
-  "description": "Tu asistente personal de finanzas con estética neon.",
-  "start_url": "index.html",
+  "description": "Finanzas personales con ingesta automática de movimientos.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0d1117",
-  "theme_color": "#00ffff",
+  "background_color": "#F4F1EA",
+  "theme_color": "#1D4F52",
   "icons": [
     {
-      "src": "assets/img/avatar.jpg",
-      "sizes": "192x192",
-      "type": "image/jpg"
-    },
-    {
-      "src": "assets/img/avatar.jpg",
-      "sizes": "512x512",
-      "type": "image/jpg"
+      "src": "assets/logos/jacomunicacion.jpg",
+      "sizes": "506x526",
+      "type": "image/jpeg",
+      "purpose": "any"
     }
   ]
 }

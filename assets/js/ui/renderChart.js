@@ -57,21 +57,28 @@ function renderChart() {
             labels: labels,
             datasets: [{
                 data: data,
-                backgroundColor: [
-                    '#ff00ff', '#00ffff', '#00ff88', '#ffaa00',
-                    '#ff0066', '#7000ff', '#0070ff', '#66ff00'
-                ],
-                borderWidth: 0,
+                backgroundColor: window.CHART_PALETTE,
+                borderWidth: 2,
+                borderColor: getComputedStyle(document.documentElement)
+                    .getPropertyValue('--card').trim() || '#FFFFFF',
                 hoverOffset: 10
             }]
         },
         options: {
             responsive: true,
+            // Anillo fino: el gráfico acompaña a la leyenda, no compite con ella
+            cutout: '68%',
             plugins: {
                 legend: {
                     display: false
                 },
                 tooltip: {
+                    backgroundColor: '#143638',
+                    padding: 11,
+                    cornerRadius: 4,
+                    titleFont: { family: 'Barlow Condensed', size: 15 },
+                    bodyFont: { family: 'Barlow Condensed', size: 16, weight: '600' },
+                    displayColors: false,
                     callbacks: {
                         label: function (context) {
                             const label = context.label || '';

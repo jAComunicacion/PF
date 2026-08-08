@@ -65,8 +65,8 @@ probada en producción.
 - Debe incluir pruebas para la lógica de normalización de transacciones y
   para los parsers de ingesta (nuevo).
 - Sin dependencias pagas de terceros para la ingesta (se descartan
-  agregadores tipo Belvo por costo; Mailgun free tier cubre el volumen bajo
-  de este proyecto).
+  agregadores tipo Belvo por costo; la recepción de email usa la casilla
+  del hosting ya contratado, sin servicios adicionales).
 
 ## Acceso (v1, un solo usuario)
 
@@ -99,18 +99,44 @@ solo dueño):
 ### Recepción de email
 
 - **Canal:** reenvío de emails de notificación (Mercado Pago, banco) a una
-  única dirección de ingesta (`ingest@tudominio.com`). El usuario configura
-  una regla de reenvío una sola vez en su propio cliente de correo.
-- **Recepción técnica:** Vercel Functions no reciben SMTP directo. Se usa
-  **Mailgun Inbound Routes** (free tier cubre el volumen de este proyecto)
-  para recibir el email y reenviarlo como webhook (POST, ya parseado) a la
-  Vercel Function correspondiente.
-- **Verificación de firma obligatoria:** cada webhook de Mailgun se valida
-  contra su firma HMAC antes de procesar nada. Sin esto, cualquiera que
-  descubra la URL del webhook podría inyectar movimientos falsos.
-- **Se descarta explícitamente:** OAuth a Gmail (requiere verificación de
-  Google para scopes sensibles), agregadores pagos (Belvo), screen scraping
-  con credenciales bancarias (riesgo legal/seguridad).
+  única dirección de ingesta, `movimientos@jacomunicacion.com.ar` (casilla ya
+  creada). El usuario configura una regla de reenvío una sola vez en su
+  propio cliente de correo.
+- **Recepción técnica:** casilla IMAP real, hosteada en Ferozo/DonWeb (plan
+  ya contratado). Vercel Functions no reciben SMTP directo, pero sí pueden
+  abrir una conexión IMAP saliente. Un endpoint de ingesta se conecta, lee
+  los mensajes no leídos, los parsea y los marca como leídos.
+
+  ```
+  Servidor:  a0171005.ferozo.com
+  IMAP:      993 (SSL)
+  SMTP:      465 (SSL)   — no se usa en la ingesta, sólo si más adelante
+                            hace falta notificar por mail
+  ```
+
+  Las credenciales de la casilla van como variables de entorno
+  (`IMAP_HOST`, `IMAP_PORT`, `IMAP_USER`, `IMAP_PASSWORD`), nunca en el
+  repositorio.
+- **Disparo:** cron externo en **cron-job.org** (free tier), que hace un
+  `GET` al endpoint de ingesta cada ~10 minutos. El endpoint se protege con
+  un token (`INGEST_TOKEN`) verificado antes de hacer nada — al vivir el
+  disparador fuera de nuestra infraestructura, el token es la única barrera.
+
+  Se evaluaron y descartaron dos alternativas: **Vercel Cron** (el plan
+  Hobby sólo permite ejecuciones diarias, inservible para polling) y el
+  **cron del hosting Ferozo** (la sección existe en el panel pero rechaza la
+  creación de tareas con un error genérico, probado el 2026-08-08 con tres
+  comandos distintos — posiblemente no incluido en el plan contratado).
+- **Se descarta explícitamente:** **Mailgun Inbound Routes** (era el plan
+  anterior — se cae al contar con casilla propia: evita un servicio externo,
+  no requiere apuntar MX a un tercero, y deja los mails archivados en la
+  casilla como respaldo auditable si un parser falla); OAuth a Gmail
+  (requiere verificación de Google para scopes sensibles); agregadores pagos
+  (Belvo); screen scraping con credenciales bancarias (riesgo
+  legal/seguridad).
+- **Contrapartida asumida:** la ingesta pasa de push (webhook, inmediata) a
+  polling (hasta 10 minutos de demora). Irrelevante para movimientos
+  financieros que se revisan una vez por día.
 - **Fallback OCR:** sacado de este Epic — ver "Fuera de este Epic" más abajo.
 
 ### Fuentes (orden de implementación)
@@ -224,9 +250,9 @@ Fase 0 — Fundación (un solo usuario)
   #2 Motor de categorías (constraint UNIQUE + upsert)
 
 Fase 1 — MVP de ingesta (Mercado Pago, obligatorio)
-  #3 Recepción de email vía Mailgun (verificación de firma) + parser
-     genérico + parser Mercado Pago — precedido por spike de validación
-     con emails reales
+  #3 Recepción de email vía IMAP (casilla propia en Ferozo + cron externo
+     en cron-job.org + token de endpoint) + parser genérico + parser
+     Mercado Pago — precedido por spike de validación con emails reales
   #4 Validación server-side centralizada (reusa transactionPayload.js)
   #5 Categorización obligatoria en línea (UI)
   #6 Panel de no procesados
@@ -303,8 +329,9 @@ de email son un problema real.
 - Backend (Vercel Functions) + esquema Postgres (Neon) + protección de
   acceso simple (v1, un usuario).
 - Motor de categorías con constraint de unicidad.
-- Recepción de email vía Mailgun (con verificación de firma) + parser
-  genérico + parser Mercado Pago + parser Banco Hipotecario.
+- Recepción de email vía IMAP sobre casilla propia (Ferozo) + cron externo
+  (cron-job.org) + parser genérico + parser Mercado Pago + parser Banco
+  Hipotecario.
 - Validación server-side centralizada (un solo módulo, tres entry points).
 - UI de categorización obligatoria en línea.
 - Panel de no procesados.
@@ -332,3 +359,17 @@ de email son un problema real.
   personal, no una plataforma multi-tenant, para no cargar el riesgo de
   infraestructura de auth antes de validar que el parser de ingesta
   funciona con emails reales.
+
+- **2026-08-08 (revisión de infraestructura):** al confirmarse que existe
+  hosting propio (Ferozo/DonWeb, dominio `jacomunicacion.com.ar`) se
+  reemplaza **Mailgun por una casilla IMAP propia**
+  (`movimientos@jacomunicacion.com.ar`) leída por polling. Se elimina así la
+  necesidad de apuntar MX a un tercero y los mails quedan archivados como
+  respaldo auditable. El disparo queda en **cron-job.org**: se descartó
+  Vercel Cron (plan Hobby, sólo ejecuciones diarias) y el cron de Ferozo
+  (rechaza la creación de tareas, verificado en el panel). **Sin cambios**
+  en el resto de la
+  arquitectura: backend sigue en Vercel Functions y base de datos en Neon
+  (Postgres) — Ferozo es hosting compartido PHP/MySQL y no puede correr el
+  backend ya construido en Fase 0. Los parsers, que son el trabajo real de
+  la Fase 1, no se ven afectados por el cambio de canal de recepción.

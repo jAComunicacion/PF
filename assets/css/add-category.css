@@ -1,19 +1,22 @@
-/* Add Category Button */
+/* Botón "+" para crear categoría desde el formulario de transacción.
+   Cuadrado, al ras del alto del campo, sin relleno de color hasta el hover. */
 .add-cat-btn {
-    background: linear-gradient(135deg, #ff00ff, #00ffff);
-    border: none;
-    color: #ffffff;
-    width: 45px;
-    border-radius: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    width: 40px;
+    flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 21px;
+    line-height: 1;
+    color: var(--petrol);
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    transition: color .2s ease, background .2s ease, border-color .2s ease;
 }
 
 .add-cat-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    color: #fff;
+    background: var(--petrol);
+    border-color: var(--petrol);
 }
