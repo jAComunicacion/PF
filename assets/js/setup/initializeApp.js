@@ -50,6 +50,8 @@ async function initializeApp() {
     setupFormListeners();
     setupActionButtons();
     if (window.setupListFilters) setupListFilters();
+    if (window.setupBalanceTabs) setupBalanceTabs();
+    if (window.setupChartsTabs) setupChartsTabs();
 
     if (window.setupAuth) setupAuth();
 

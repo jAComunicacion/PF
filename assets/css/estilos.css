@@ -332,6 +332,51 @@ select {
     margin-top: 8px;
 }
 
+.balance-tabs {
+    margin-bottom: 10px;
+}
+
+/* Fila de Ingresos / Gastos bajo el balance del mes. Se reutilizan los
+   colores cálidos de la propia tarjeta (arena/teal) en vez de rojo/verde
+   semánticos: sobre el petróleo profundo leen mejor y no compiten con la
+   marca. */
+.month-stats {
+    display: flex;
+    gap: 22px;
+    margin-top: 16px;
+}
+
+.month-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.month-stat-label {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--sand);
+    opacity: .85;
+}
+
+.month-stat-value {
+    font-family: var(--font-cond);
+    font-size: 20px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.month-stat-value.is-income {
+    color: var(--teal-soft);
+}
+
+.month-stat-value.is-expense {
+    color: var(--sand);
+}
+
 /* Barrido de luz al actualizar el saldo — se dispara desde JS
    (triggerShine), no corre en loop */
 .balance-card.shine-active::after {

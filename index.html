@@ -33,7 +33,7 @@
         <div id="dashboard-screen" class="screen active" data-screen="dashboard">
             <div class="profile-section">
                 <div class="profile-photo" id="profile-btn" style="cursor: pointer;">
-                    <img src="assets/img/avatar.jpg" alt="Profile" id="profile-img">
+                    <img src="assets/logos/jacomunicacion.jpg" alt="jA Comunicación" id="profile-img">
                 </div>
                 <div class="profile-info">
                     <h1 class="greeting" title="Clic para editar nombre">¡Hola, <span id="user-name">Invitado</span>!
@@ -44,7 +44,29 @@
                     <i class="ph ph-sign-out"></i>
                 </button>
             </div>
-            <div class="balance-card">
+            <!-- Al abrir la app importa más "cómo voy este mes" que un saldo
+                 acumulado de años. El Total sigue a un toque de distancia. -->
+            <div class="range-tabs balance-tabs" id="balance-tabs" role="group" aria-label="Vista de saldo">
+                <button type="button" class="range-tab is-active" data-balance-view="mes">Este Mes</button>
+                <button type="button" class="range-tab" data-balance-view="total">Total</button>
+            </div>
+
+            <div class="balance-card" id="balance-view-month">
+                <p class="balance-label">Balance de <span id="month-label-name">Este Mes</span></p>
+                <h2 class="balance-amount" id="month-balance">$0.00</h2>
+                <div class="month-stats">
+                    <div class="month-stat">
+                        <span class="month-stat-label">Ingresos</span>
+                        <span class="month-stat-value is-income" id="month-income">$0.00</span>
+                    </div>
+                    <div class="month-stat">
+                        <span class="month-stat-label">Gastos</span>
+                        <span class="month-stat-value is-expense" id="month-expense">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="balance-card" id="balance-view-total" hidden>
                 <p class="balance-label">Saldo Total</p>
                 <!-- ID corregido a current-balance para coincidir con JS -->
                 <h2 class="balance-amount" id="current-balance">$0.00</h2>
@@ -163,17 +185,38 @@
 
         <!-- Pantalla de Gráficos -->
         <div id="charts-screen" class="screen" data-screen="charts">
-            <div class="screen-header">
-                <h2 class="screen-title">Gastos por Categoría</h2>
-                <select id="chart-range-filter" onchange="changeChartFilter(this.value)">
-                    <option value="month">Este Mes</option>
-                    <option value="all">Histórico</option>
-                </select>
+            <div class="range-tabs charts-tabs" id="charts-tabs" role="group" aria-label="Vista de gráficas">
+                <button type="button" class="range-tab is-active" data-charts-view="categoria">Por Categoría</button>
+                <button type="button" class="range-tab" data-charts-view="comparativa">Comparativa 3 Meses</button>
             </div>
-            <div class="chart-container">
-                <!-- Se inyecta con Chart.js -->
+
+            <div id="charts-view-categoria">
+                <div class="screen-header">
+                    <h2 class="screen-title">Gastos por Categoría</h2>
+                    <select id="chart-range-filter" onchange="changeChartFilter(this.value)">
+                        <option value="month">Este Mes</option>
+                        <option value="all">Histórico</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <!-- Se inyecta con Chart.js -->
+                </div>
+                <div class="chart-legend" id="chart-legend"></div>
             </div>
-            <div class="chart-legend" id="chart-legend"></div>
+
+            <!-- El reporte "por columnas" de tres meses que se armaba en
+                 Microsoft Money → Informes: ingresos y gastos de cada mes,
+                 uno al lado del otro, para ver de un vistazo si se mejoró o
+                 se empeoró. -->
+            <div id="charts-view-comparativa" hidden>
+                <div class="screen-header">
+                    <h2 class="screen-title">Comparativa 3 Meses</h2>
+                </div>
+                <div class="chart-container">
+                    <!-- Se inyecta con Chart.js -->
+                </div>
+                <div class="chart-legend" id="compare-legend"></div>
+            </div>
         </div>
 
         <nav class="bottom-nav">
@@ -266,13 +309,18 @@
     <script src="assets/js/data/transactionFilters.js"></script>
     <script src="assets/js/data/seedCategories.js"></script>
     <script src="assets/js/utils/formatCurrency.js"></script>
+    <script src="assets/js/utils/formEntryMemory.js"></script>
     <script src="assets/js/setup/setupAuth.js"></script>
     <script src="assets/js/utils/getCategoryIcon.js"></script>
     <script src="assets/js/data/calculateBalance.js"></script>
     <script src="assets/js/data/calculateHealthScore.js"></script>
+    <script src="assets/js/data/calculateMonthSummary.js"></script>
+    <script src="assets/js/data/calculateLastMonths.js"></script>
+    <script src="assets/js/ui/setupBalanceTabs.js"></script>
     <script src="assets/js/ui/openTransactionModal.js"></script>
     <script src="assets/js/ui/closeTransactionModal.js"></script>
     <script src="assets/js/ui/handleCategoryChange.js"></script>
+    <script src="assets/js/ui/autofillByName.js"></script>
     <script src="assets/js/ui/handleAddCategory.js"></script>
     <script src="assets/js/data/transactionPayload.js"></script>
     <script src="assets/js/data/addTransaction.js"></script>
@@ -289,6 +337,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="assets/js/ui/renderLegend.js"></script>
     <script src="assets/js/ui/renderChart.js"></script>
+    <script src="assets/js/ui/renderMonthCompareChart.js"></script>
+    <script src="assets/js/ui/setupChartsTabs.js"></script>
     <script src="assets/js/ui/openMetasModal.js"></script>
     <script src="assets/js/ui/closeMetasModal.js"></script>
     <script src="assets/js/data/addBudget.js"></script>

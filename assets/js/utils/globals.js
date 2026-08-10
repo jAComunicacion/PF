@@ -4,6 +4,7 @@ let currentScreen = 'dashboard';
 let expenseChart = null;
 let monthlyBudget = 0;
 let chartFilter = 'month'; // 'month', 'all'
+let chartsView = 'categoria'; // 'categoria', 'comparativa' — solapa activa de Gráficas
 
 // Exponer al objeto window para acceso desde otros scripts.
 //
@@ -16,6 +17,7 @@ window.transactions = transactions;
 window.currentScreen = currentScreen;
 window.expenseChart = expenseChart;
 window.chartFilter = chartFilter;
+window.chartsView = chartsView;
 window.monthlyBudget = monthlyBudget;
 
 // Paleta categórica del gráfico. Derivada de la marca (petróleo + arena +

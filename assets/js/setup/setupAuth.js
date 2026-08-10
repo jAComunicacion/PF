@@ -4,7 +4,7 @@
 const defaultUser = {
     uid: "local-user-v1",
     displayName: "Invitado",
-    photoURL: "assets/img/avatar.jpg",
+    photoURL: "assets/logos/jacomunicacion.jpg",
     email: "local@app.com"
 };
 

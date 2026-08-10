@@ -57,6 +57,7 @@ async function addTransaction(event) {
             if (updated) closeTransactionModal();
         } else {
             await window.api.createTransaction(payload);
+            if (window.rememberDate) window.rememberDate(date);
             closeTransactionModal();
             await window.refreshData();
             showToast('Transacción agregada correctamente', 'success');

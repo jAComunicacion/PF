@@ -15,16 +15,17 @@
    Estrategia actual: la red manda para navegación y API; el caché sólo guarda
    estáticos versionados (CSS, JS, imágenes). */
 
-// v6: el grafico arranca en "Este Mes" y el dia 1 del mes cuenta.
-// Subir el numero es lo que hace que el celular tire el cache viejo.
-const CACHE_NAME = 'perscount-v6';
+// v7: avatar reemplazado por el logo, solapas de saldo, y autocompletado
+// de fecha/categoria en el formulario. Subir el numero es lo que hace que
+// el celular tire el cache viejo.
+const CACHE_NAME = 'perscount-v7';
 
 const ASSETS = [
     '/index.html',
     '/assets/css/estilos.css',
     '/assets/css/dynamic-styles.css',
     '/assets/css/add-category.css',
-    '/assets/img/avatar.jpg',
+    '/assets/logos/jacomunicacion.jpg',
     '/assets/logos/IsoLogojAComunicacion.png',
     '/assets/logos/LogusjAComunicacion.png',
     '/assets/js/vendors/chart.js',

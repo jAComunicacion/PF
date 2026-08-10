@@ -24,7 +24,11 @@ function showScreen(screenName) {
     } else if (screenName === 'transactions') {
         renderTransactions();
     } else if (screenName === 'charts') {
-        renderChart();
+        if (window.chartsView === 'comparativa' && window.renderMonthCompareChart) {
+            renderMonthCompareChart();
+        } else {
+            renderChart();
+        }
     }
 }
 

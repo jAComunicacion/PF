@@ -8,6 +8,20 @@ function updateDashboard() {
         totalBalanceEl.textContent = formatCurrency(balance);
     }
 
+    // Solapa "Este Mes": lo que se ve al abrir la app.
+    const monthSummary = calculateMonthSummary();
+    const monthBalanceEl = document.getElementById('month-balance');
+    const monthIncomeEl = document.getElementById('month-income');
+    const monthExpenseEl = document.getElementById('month-expense');
+    const monthLabelEl = document.getElementById('month-label-name');
+    if (monthBalanceEl) monthBalanceEl.textContent = formatCurrency(monthSummary.balance);
+    if (monthIncomeEl) monthIncomeEl.textContent = formatCurrency(monthSummary.income, 'income');
+    if (monthExpenseEl) monthExpenseEl.textContent = formatCurrency(monthSummary.expense, 'expense');
+    if (monthLabelEl) {
+        const nombreMes = new Date().toLocaleDateString('es-AR', { month: 'long' });
+        monthLabelEl.textContent = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+    }
+
     // Update health bar
     const healthFill = document.getElementById('health-fill');
     const healthPercentageEl = document.getElementById('health-percentage');

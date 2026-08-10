@@ -20,7 +20,14 @@ async function openTransactionModal(type, defaultName = '', transactionToEdit = 
 
     if (nameInput) nameInput.value = transactionToEdit ? transactionToEdit.name || '' : defaultName;
     if (amountInput) amountInput.value = transactionToEdit ? transactionToEdit.amount || '' : '';
-    if (dateInput) dateInput.value = transactionToEdit ? transactionToEdit.date || '' : '';
+    // Para una transacción nueva se parte de la última fecha cargada, no de
+    // hoy: quien va anotando gastos de un mismo día no quiere reescribirla
+    // en cada movimiento.
+    if (dateInput) {
+        dateInput.value = transactionToEdit
+            ? transactionToEdit.date || ''
+            : (window.lastUsedDate ? window.lastUsedDate() : '');
+    }
     if (subcategoryGroup) subcategoryGroup.style.display = 'none';
     if (subcategorySelect) subcategorySelect.innerHTML = '';
 
