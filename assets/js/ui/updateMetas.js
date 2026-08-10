@@ -7,17 +7,11 @@ function updateMetas() {
 
     const budget = window.monthlyBudget || 0;
 
-    // Calcular gastos del mes actual
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
+    // Gastos del mes en curso. Se compara el prefijo 'YYYY-MM' del texto de la
+    // fecha: pasarla por new Date la lee como UTC y en Argentina el día 1 de
+    // cada mes se corría al mes anterior, quedando afuera del total.
     const monthlyExpenses = (window.transactions || [])
-        .filter(t => t.type === 'expense')
-        .filter(t => {
-            const d = new Date(t.date);
-            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-        })
+        .filter(t => t.type === 'expense' && window.transactionFilters.esDelMes(t))
         .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
     // Actualizar UI

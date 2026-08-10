@@ -6,7 +6,9 @@ const {
     aplicarFiltros,
     describirRango,
     coincideTexto,
-    normalizar
+    normalizar,
+    mesActual,
+    esDelMes
 } = require('../assets/js/data/transactionFilters.js');
 
 // Un dia fijo para que los tests no dependan de cuando se corran.
@@ -129,6 +131,35 @@ test('el encabezado describe el periodo en criollo', () => {
         describirRango(filtro({ rango: 'entre', desde: '2026-03-01' }), HOY),
         'desde el 01/03/26'
     );
+});
+
+test('el dia 1 del mes cuenta como "este mes"', () => {
+    // El bug que esto viene a tapar: new Date('2026-08-01') se lee como UTC y
+    // en Argentina (UTC-3) cae el 31 de julio, asi que el gasto del dia 1
+    // desaparecia del total del mes en el grafico y en las metas mensuales.
+    // Se comprueba solo al oeste de Greenwich, que es donde se manifiesta.
+    if (new Date('2026-08-01').getTimezoneOffset() > 0) {
+        assert.strictEqual(new Date('2026-08-01').getMonth(), 6,
+            'asi se veia el bug: el 1 de agosto contaba como julio');
+    }
+
+    assert.strictEqual(mesActual(HOY), '2026-08');
+
+    assert.ok(esDelMes({ date: '2026-08-01' }, HOY), 'el dia 1 tiene que entrar');
+    assert.ok(esDelMes({ date: '2026-08-31' }, HOY), 'el ultimo dia tambien');
+    assert.ok(!esDelMes({ date: '2026-07-31' }, HOY), 'el mes anterior no');
+    assert.ok(!esDelMes({ date: '2025-08-15' }, HOY), 'el mismo mes de otro ano tampoco');
+});
+
+test('esDelMes no rompe con una fecha ausente', () => {
+    assert.ok(!esDelMes({}, HOY));
+    assert.ok(!esDelMes({ date: null }, HOY));
+});
+
+test('mesActual pone el cero adelante en los meses de un digito', () => {
+    assert.strictEqual(mesActual(new Date(2026, 0, 5)), '2026-01');
+    assert.strictEqual(mesActual(new Date(2026, 8, 5)), '2026-09');
+    assert.strictEqual(mesActual(new Date(2026, 11, 31)), '2026-12');
 });
 
 test('una lista vacia o nula no rompe', () => {

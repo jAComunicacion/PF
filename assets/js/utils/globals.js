@@ -5,10 +5,18 @@ let expenseChart = null;
 let monthlyBudget = 0;
 let chartFilter = 'month'; // 'month', 'all'
 
-// Exponer al objeto window para acceso desde otros scripts
+// Exponer al objeto window para acceso desde otros scripts.
+//
+// `chartFilter` y `monthlyBudget` faltaban acá. Un `let` de nivel superior NO
+// crea una propiedad en window, así que renderChart preguntaba por
+// `window.chartFilter === 'month'`, recibía undefined y caía en el histórico:
+// el desplegable decía "Este Mes" y el gráfico mostraba los cinco años. Se
+// arreglaba solo al tocar el desplegable, que era lo que lo hacía confuso.
 window.transactions = transactions;
 window.currentScreen = currentScreen;
 window.expenseChart = expenseChart;
+window.chartFilter = chartFilter;
+window.monthlyBudget = monthlyBudget;
 
 // Paleta categórica del gráfico. Derivada de la marca (petróleo + arena +
 // terracota): una sola familia cromática, no colores sueltos. Vive acá para

@@ -15,9 +15,9 @@
    Estrategia actual: la red manda para navegación y API; el caché sólo guarda
    estáticos versionados (CSS, JS, imágenes). */
 
-// v5: buscador y recorte por periodo en la lista de movimientos.
+// v6: el grafico arranca en "Este Mes" y el dia 1 del mes cuenta.
 // Subir el numero es lo que hace que el celular tire el cache viejo.
-const CACHE_NAME = 'perscount-v5';
+const CACHE_NAME = 'perscount-v6';
 
 const ASSETS = [
     '/index.html',

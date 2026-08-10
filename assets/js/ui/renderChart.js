@@ -17,17 +17,13 @@ function renderChart() {
     container.innerHTML = '';
     container.appendChild(ctx);
 
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
     const expenseTransactions = (window.transactions || []).filter(t => {
         if (t.type !== 'expense') return false;
-        if (window.chartFilter === 'month') {
-            const d = new Date(t.date);
-            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-        }
-        return true;
+        if (window.chartFilter !== 'month') return true;
+        // Se compara el prefijo 'YYYY-MM' del texto de la fecha: pasarla por
+        // new Date la lee como UTC y en Argentina el día 1 de cada mes se
+        // corría al mes anterior, quedando afuera del total.
+        return window.transactionFilters.esDelMes(t);
     });
 
     if (expenseTransactions.length === 0) {

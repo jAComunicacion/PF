@@ -94,6 +94,20 @@ function aplicarFiltros(transacciones, filtro, categoria = 'all', hoy = new Date
     });
 }
 
+// 'YYYY-MM' del mes en curso. Lo usan el gráfico y las metas mensuales para
+// quedarse con "este mes" comparando el prefijo de la fecha.
+//
+// Antes cada uno hacia `new Date(t.date).getMonth()`, y ahi 'YYYY-MM-DD' se
+// interpreta como UTC: en Argentina el dia 1 de cada mes retrocedia al mes
+// anterior y ese movimiento desaparecia del total del mes.
+function mesActual(hoy = new Date()) {
+    return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function esDelMes(transaccion, hoy = new Date()) {
+    return String(transaccion.date || '').startsWith(mesActual(hoy));
+}
+
 // Texto del encabezado: "47 movimientos · 11/07 al 10/08".
 function describirRango(filtro, hoy = new Date()) {
     if (filtro.rango === 'todo') return 'Todo el historial';
@@ -114,10 +128,15 @@ if (typeof window !== 'undefined') {
         limitesDelRango,
         aplicarFiltros,
         describirRango,
-        coincideTexto
+        coincideTexto,
+        mesActual,
+        esDelMes
     };
 }
 
 if (typeof module !== 'undefined') {
-    module.exports = { RANGOS, limitesDelRango, aplicarFiltros, describirRango, coincideTexto, normalizar };
+    module.exports = {
+        RANGOS, limitesDelRango, aplicarFiltros, describirRango,
+        coincideTexto, normalizar, mesActual, esDelMes
+    };
 }
