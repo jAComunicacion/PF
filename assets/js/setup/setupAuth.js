@@ -11,28 +11,27 @@ const defaultUser = {
 window.auth = {
     currentUser: defaultUser,
     onAuthStateChanged: async (callback) => {
-        // Load user settings from DB if available
-        if (window.db) {
-            try {
-                const nameSetting = await window.db.settings.get('userName');
-                if (nameSetting) defaultUser.displayName = nameSetting.value;
-
-                // We could also store avatar URL
-            } catch (e) {
-                console.log("Could not load user settings yet");
-            }
-        }
-
         callback(defaultUser);
         return () => { };
     },
-    signOut: () => window.location.reload()
+    signOut: () => window.location.replace('/login.html')
 };
 
 function setupAuth() {
     const userNameEl = document.querySelector('.greeting'); // The entire h1
     const nameSpan = document.getElementById('user-name');
     const profileImgEl = document.getElementById('profile-img');
+
+    // El nombre se guarda en el servidor junto al resto de los ajustes, así que
+    // te saluda igual desde el celular que desde la compu.
+    window.api.getSettings()
+        .then(settings => {
+            if (settings && settings.userName) {
+                defaultUser.displayName = settings.userName;
+                if (nameSpan) nameSpan.textContent = settings.userName;
+            }
+        })
+        .catch(() => { /* refreshData ya avisa si el servidor no responde */ });
 
     // Load initial state
     if (nameSpan) nameSpan.textContent = defaultUser.displayName;
@@ -47,10 +46,11 @@ function setupAuth() {
                 defaultUser.displayName = newName;
                 if (nameSpan) nameSpan.textContent = newName;
 
-                // Save to DB
-                if (window.db) {
-                    await window.db.settings.put({ key: 'userName', value: newName });
+                try {
+                    await window.api.putSetting('userName', newName);
                     showToast(`Nombre actualizado a ${newName}`, 'success');
+                } catch (e) {
+                    showToast(e.message || 'No se pudo guardar el nombre.', 'error');
                 }
             }
         });

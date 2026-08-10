@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <title>Personal Count</title>
 
     <!-- Tipografía: Fraunces (display editorial) + Barlow / Barlow Condensed
@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap">
 
     <link rel="stylesheet" href="assets/css/estilos.css">
     <link rel="stylesheet" href="assets/css/dynamic-styles.css">
@@ -39,6 +39,9 @@
                     </h1>
                     <p class="subtitle">Bienvenido de nuevo</p>
                 </div>
+                <button class="logout-btn" id="logout-btn" type="button" title="Cerrar sesión">
+                    <i class="ph ph-sign-out"></i>
+                </button>
             </div>
             <div class="balance-card">
                 <p class="balance-label">Saldo Total</p>
@@ -184,7 +187,7 @@
                     <div class="form-group">
                         <label for="transaction-category">Categoría</label>
                         <div style="display: flex; gap: 10px;">
-                            <select id="transaction-category" onchange="handleCategoryChange(this.value)"
+                            <select id="transaction-category" onchange="handleCategoryChange()"
                                 style="flex: 1;">
                                 <!-- Dynamic -->
                             </select>
@@ -226,10 +229,11 @@
         </div>
     </div>
 
-    <!-- Local Database -->
-    <script src="assets/js/vendors/dexie.js"></script>
+    <!-- Los datos viven en Postgres (Neon) y se leen vía /api. La capa de
+         IndexedDB (Dexie) se eliminó: era local a cada dispositivo, que es por
+         qué el celular y la compu mostraban saldos distintos. -->
     <script src="assets/js/vendors/chart.js"></script>
-    <script src="assets/js/data/db.js"></script>
+    <script src="assets/js/data/api.js"></script>
     <script src="assets/js/utils/globals.js"></script>
     <script src="assets/js/data/categoryService.js"></script>
     <script src="assets/js/data/seedCategories.js"></script>
@@ -248,7 +252,6 @@
     <script src="assets/js/data/deleteTransaction.js"></script>
     <script src="assets/js/ui/renderTransactions.js"></script>
     <script src="assets/js/utils/filterTransactions.js"></script>
-    <script src="assets/js/data/saveTransactions.js"></script>
     <script src="assets/js/ui/updateDashboard.js"></script>
     <script src="assets/js/ui/showScreen.js"></script>
     <script src="assets/js/setup/setupNavigationListeners.js"></script>
@@ -265,6 +268,7 @@
     <script src="assets/js/export/exportToPDF.js"></script>
     <script src="assets/js/export/backupToJSON.js"></script>
     <script src="assets/js/ui/toast.js"></script>
+    <script src="assets/js/setup/logout.js"></script>
     <script src="assets/js/setup/initializeApp.js"></script>
 </body>
 

@@ -310,9 +310,12 @@ select {
     margin-bottom: 4px;
 }
 
+/* Las cifras van en peso normal: el tamaño ya les da toda la jerarquía que
+   necesitan, y la condensada en 400 se lee como planilla contable en vez de
+   como titular. Julio, 10-ago-2026. */
 .balance-amount {
     font-family: var(--font-cond);
-    font-weight: 800;
+    font-weight: 400;
     font-size: clamp(52px, 17vw, 74px);
     line-height: .92;
     letter-spacing: -.02em;
@@ -323,7 +326,7 @@ select {
 .balance-change {
     font-family: var(--font-cond);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: .08em;
     color: var(--teal-soft);
     margin-top: 8px;
@@ -462,7 +465,7 @@ select {
 .health-percentage {
     font-family: var(--font-cond);
     font-size: 32px;
-    font-weight: 800;
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
     line-height: 1;
     color: var(--petrol);
@@ -499,7 +502,7 @@ select {
 .budget-value {
     font-family: var(--font-cond);
     font-size: 26px;
-    font-weight: 800;
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
 }
@@ -743,7 +746,7 @@ select {
     grid-area: amount;
     font-family: var(--font-cond);
     font-size: 22px;
-    font-weight: 800;
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
     align-self: center;
@@ -863,7 +866,7 @@ select {
 }
 
 .legend-value {
-    font-weight: 800;
+    font-weight: 400;
     font-size: 19px;
     color: var(--ink);
 }
@@ -1111,4 +1114,33 @@ select {
         height: 225px;
         right: -64px;
     }
+}
+
+/* ==================== CERRAR SESIÓN ====================
+   Discreto y al margen derecho: es una salida, no una acción principal. */
+.logout-btn {
+    margin-left: auto;
+    flex: none;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 19px;
+    color: var(--ink-mute);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.logout-btn:hover:not(:disabled) {
+    color: var(--petrol);
+    border-color: var(--petrol);
+    background: var(--card-alt);
+}
+
+.logout-btn:disabled {
+    opacity: .5;
+    cursor: progress;
 }

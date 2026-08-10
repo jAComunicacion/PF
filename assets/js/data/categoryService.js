@@ -1,49 +1,53 @@
 // assets/js/data/categoryService.js
+//
+// Las categorías ahora viven en Postgres. Se cachean en memoria porque el modal
+// las consulta varias veces por apertura (lista principal + subcategorías) y no
+// tiene sentido un viaje al servidor por cada select.
+//
+// La API expone las categorías con `id`; la UI las muestra por `name`. La
+// traducción entre las dos vive acá y en ningún otro lado.
 
-// Fetch categories by type (income/expense)
+let cache = null;
+
+async function loadCategories(force = false) {
+    if (cache && !force) return cache;
+    cache = await window.api.getCategories();
+    return cache;
+}
+
+function invalidate() {
+    cache = null;
+}
+
 async function getCategoriesByType(type) {
-    if (!window.db) return [];
-    // Get top-level categories of the specific type (parentId is null/undefined)
-    return await window.db.categories
-        .where('type').equals(type)
-        .filter(c => !c.parentId)
-        .toArray();
+    const all = await loadCategories();
+    return all.filter(c => c.type === type && !c.parentId);
 }
 
-// Fetch subcategories for a given parent category ID
 async function getSubcategories(parentId) {
-    if (!window.db) return [];
-    return await window.db.categories
-        .where('parentId').equals(parentId)
-        .toArray();
+    if (!parentId) return [];
+    const all = await loadCategories();
+    const numericParentId = Number(parentId);
+    return all.filter(c => Number(c.parentId) === numericParentId);
 }
 
-// Fetch a single category by name (helper)
-async function getCategoryByName(name) {
-    if (!window.db) return null;
-    return await window.db.categories.get({ name: name });
+// `type` es opcional pero conviene pasarlo: hay nombres repetidos entre los dos
+// árboles (por ejemplo "Servicios" es categoría de gasto y también subcategoría
+// de "Clientes" en ingresos). Sin el tipo, la búsqueda por nombre es ambigua.
+async function getCategoryByName(name, type = null) {
+    const all = await loadCategories();
+    return all.find(c => c.name === name && (type === null || c.type === type)) || null;
 }
 
-// Add a new category or subcategory
 async function addCategory(name, type, parentId = null) {
-    if (!window.db) return;
-
-    // Check for duplicate
-    const existing = await window.db.categories
-        .where({ name: name, type: type })
-        .filter(c => c.parentId === parentId)
-        .first();
-
-    if (existing) return existing.id;
-
-    return await window.db.categories.add({
-        name,
-        type,
-        parentId
-    });
+    const created = await window.api.createCategory({ name, type, parentId });
+    invalidate();
+    return created ? created.id : null;
 }
 
 window.categoryService = {
+    loadCategories,
+    invalidate,
     getCategoriesByType,
     getSubcategories,
     getCategoryByName,

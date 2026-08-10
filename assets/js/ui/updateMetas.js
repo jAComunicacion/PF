@@ -31,12 +31,12 @@ function updateMetas() {
     budgetFillEl.style.width = `${percentage}%`;
     budgetStatusEl.textContent = `Gastado: ${formatCurrency(monthlyExpenses)} de ${formatCurrency(budget)}`;
 
-    // Cambiar color si se supera el presupuesto
-    if (percentage >= 90) {
-        budgetFillEl.style.background = 'linear-gradient(90deg, #ffaa00, #ff0066)';
-    } else {
-        budgetFillEl.style.background = 'linear-gradient(90deg, #00ffff, #00ff88)';
-    }
+    // Aviso cuando el gasto se acerca al tope. Estos colores eran degradés de
+    // neón (#00ffff → #00ff88) que sobrevivieron al rediseño "Libro mayor" y
+    // pisaban la paleta desde JS, por inline style. Ahora: arena para el curso
+    // normal, terracota para el aviso — la misma semántica del dinero que usa
+    // el resto de la app (--expense).
+    budgetFillEl.style.background = percentage >= 90 ? '#B4553A' : '#D4B896';
 }
 
 window.updateMetas = updateMetas;

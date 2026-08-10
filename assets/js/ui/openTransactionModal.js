@@ -33,8 +33,14 @@ async function openTransactionModal(type, defaultName = '', transactionToEdit = 
     loadingOption.textContent = 'Cargando...';
     categorySelect.appendChild(loadingOption);
 
-    // Fetch from DB
-    const categories = await window.categoryService.getCategoriesByType(type);
+    // Las categorías vienen del servidor (cacheadas en categoryService)
+    let categories = [];
+    try {
+        categories = await window.categoryService.getCategoriesByType(type);
+    } catch (e) {
+        console.error('No se pudieron cargar las categorías:', e);
+        showToast(e.message || 'No se pudieron cargar las categorías.', 'error');
+    }
 
     // Populate Select
     categorySelect.innerHTML = '';
@@ -47,25 +53,34 @@ async function openTransactionModal(type, defaultName = '', transactionToEdit = 
     } else {
         categories.forEach(cat => {
             const option = document.createElement('option');
-            option.value = cat.name; // We store name for now to keep compatibility
+            option.value = cat.name; // El nombre es lo que se muestra
             option.textContent = cat.name;
-            option.dataset.id = cat.id;
+            option.dataset.id = cat.id; // El id es lo que se guarda
             categorySelect.appendChild(option);
         });
     }
 
-    // Handle initial selection
+    // Selección inicial
     if (categories.length > 0) {
-        const defaultCategory = transactionToEdit ? transactionToEdit.category : (type === 'income' ? 'Otros ingresos' : 'Alimentación');
-        const exists = categories.find(c => c.name === defaultCategory);
-        categorySelect.value = exists ? defaultCategory : categories[0].name;
-
-        if (transactionToEdit && transactionToEdit.subcategory) {
-            if (subcategoryGroup) subcategoryGroup.style.display = 'block';
+        // Al editar se preselecciona por id, no por nombre: es lo único que
+        // identifica sin ambigüedad a la categoría.
+        let index = -1;
+        if (transactionToEdit && transactionToEdit.categoryId) {
+            index = categories.findIndex(c => Number(c.id) === Number(transactionToEdit.categoryId));
+        } else {
+            const fallback = type === 'income' ? 'Otros ingresos' : 'Alimentación';
+            index = categories.findIndex(c => c.name === fallback);
         }
+        categorySelect.selectedIndex = index >= 0 ? index : 0;
 
-        // Trigger subcategory load
-        handleCategoryChange(categorySelect.value);
+        await handleCategoryChange();
+
+        // Ya cargadas las subcategorías, se marca la que tenía la transacción.
+        if (transactionToEdit && transactionToEdit.subcategoryId && subcategorySelect) {
+            const subOption = Array.from(subcategorySelect.options)
+                .find(o => Number(o.dataset.id) === Number(transactionToEdit.subcategoryId));
+            if (subOption) subcategorySelect.value = subOption.value;
+        }
     }
 
     modal.classList.add('active');

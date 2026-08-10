@@ -9,22 +9,25 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Global function to refresh data from Local DB
+// Trae el estado desde el servidor. Antes leía IndexedDB, que era local a cada
+// navegador: por eso el celular mostraba los movimientos y la compu $0.00.
 window.refreshData = async function () {
-    if (!window.db) return;
-
     try {
-        // 1. Fetch Transactions
-        const txs = await window.db.transactions.toArray();
-        // Sort by date desc
+        // Las dos consultas son independientes, así que van juntas en vez de
+        // una detrás de la otra.
+        const [rows, settings] = await Promise.all([
+            window.api.getTransactions(),
+            window.api.getSettings()
+        ]);
+
+        const txs = (rows || []).map(window.api.toUiTransaction);
         txs.sort((a, b) => new Date(b.date) - new Date(a.date));
         window.transactions = txs;
 
-        // 2. Fetch Budget
-        const budgetSetting = await window.db.settings.get('monthlyBudget');
-        window.monthlyBudget = budgetSetting ? budgetSetting.value : 0;
+        window.monthlyBudget = settings && settings.monthlyBudget
+            ? window.api.toNumber(settings.monthlyBudget)
+            : 0;
 
-        // 3. Update UI
         updateDashboard();
         renderTransactions();
         updateMetas();
@@ -32,10 +35,13 @@ window.refreshData = async function () {
         if (window.currentScreen === 'charts' && window.renderChart) {
             window.renderChart();
         }
-
-        console.log("Datos actualizados desde DB Local.");
     } catch (e) {
-        console.error("Error al refrescar datos:", e);
+        console.error('Error al refrescar datos:', e);
+        // Un 401 ya redirigió al ingreso; cualquier otra cosa se avisa, porque
+        // la alternativa es una pantalla en $0.00 que parece un saldo real.
+        if (e.message !== 'Sesión vencida.' && typeof showToast === 'function') {
+            showToast(`No se pudieron cargar los datos: ${e.message}`, 'error');
+        }
     }
 };
 
@@ -44,21 +50,19 @@ async function initializeApp() {
     setupFormListeners();
     setupActionButtons();
 
-    // Initialize Mock Auth (mostly for UI consistency)
     if (window.setupAuth) setupAuth();
 
-    // Initialize Categories (Seed if empty)
+    // Siembra las categorías por defecto si la base está vacía. El servidor
+    // decide; acá sólo se dispara.
     if (window.seedCategories) {
         await window.seedCategories();
     }
 
-    // Initialize Date Input
     const dateInput = document.getElementById('transaction-date');
     if (dateInput) {
         dateInput.valueAsDate = new Date();
     }
 
-    // Load Data
     await window.refreshData();
 
     showScreen('dashboard');

@@ -1,0 +1,320 @@
+/* =====================================================================
+   PERSONAL COUNT — Pantalla de ingreso
+   ---------------------------------------------------------------------
+   Misma dirección estética que el resto ("Libro mayor"): papel impreso,
+   filetes finos, cifras y títulos en condensada. Acá el fondo es verde
+   petróleo profundo, que es la versión principal de la marca: isotipo
+   blanco sobre petróleo.
+
+   El isotipo NO se compone con tipografía. Se usa el archivo outline
+   (assets/logos/IsoLogojAComunicacion.png) como máscara CSS, y el color
+   se "completa" de abajo hacia arriba dentro del trazo real del logo.
+   ===================================================================== */
+
+:root {
+    --petrol: #2E7D82;
+    --petrol-deep: #1D4F52;
+    --petrol-ink: #12292B;
+    --sand: #D4B896;
+    --paper: #F4F1EA;
+    --teal-soft: #C8DCDC;
+
+    --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --font-cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --font-body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+
+    --radius: 4px;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--paper);
+    background: var(--petrol-ink);
+    /* 100dvh y no 100%: en móvil la barra del navegador se retrae y `%` sobre
+       un padre sin altura no centra nada. */
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 22px;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==================== MARCA DE AGUA ====================
+   Firma visual del estudio: el isotipo en baja opacidad, sangrado por el
+   borde. Es el mismo archivo del logo, sólo escalado — no un dibujo nuevo. */
+.watermark {
+    position: fixed;
+    right: -18%;
+    bottom: -12%;
+    width: min(115vw, 900px);
+    aspect-ratio: 1196 / 741;
+    opacity: .07;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+.watermark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ==================== TARJETA ==================== */
+.login-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* ==================== ISOTIPO QUE SE COMPLETA ====================
+   El PNG es un trazo muy fino (1196px de ancho reducidos a ~200px), así que
+   una sola capa de máscara quedaría casi invisible. Se apilan cinco copias
+   desplazadas un pelo en cada dirección: al componerse suman opacidad y
+   engrosan el trazo, sin deformar el dibujo.
+
+   El desplazamiento es 0.6px a propósito. Con 1.5px las copias se separaban
+   lo suficiente como para leerse dos líneas paralelas — el trazo del logo
+   deja de ser el trazo del logo. A 0.6px funden en una sola línea. */
+.iso {
+    --iso-src: url('../logos/IsoLogojAComunicacion.png');
+
+    position: relative;
+    width: clamp(160px, 42vw, 215px);
+    aspect-ratio: 1196 / 741;
+    overflow: hidden;
+
+    -webkit-mask-image: var(--iso-src), var(--iso-src), var(--iso-src), var(--iso-src), var(--iso-src);
+    mask-image: var(--iso-src), var(--iso-src), var(--iso-src), var(--iso-src), var(--iso-src);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position:
+        50% 50%,
+        calc(50% - 0.6px) 50%,
+        calc(50% + 0.6px) 50%,
+        50% calc(50% - 0.6px),
+        50% calc(50% + 0.6px);
+    mask-position:
+        50% 50%,
+        calc(50% - 0.6px) 50%,
+        calc(50% + 0.6px) 50%,
+        50% calc(50% - 0.6px),
+        50% calc(50% + 0.6px);
+}
+
+/* Trazo "vacío": el logo esperando. */
+.iso__base {
+    position: absolute;
+    inset: 0;
+    background: rgba(244, 241, 234, .26);
+}
+
+/* Trazo "lleno": sube desde abajo y completa el color. */
+.iso__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    clip-path: inset(100% 0 0 0);
+    animation: iso-rise 1.4s cubic-bezier(.33, .9, .2, 1) forwards;
+}
+
+/* Mientras se espera al servidor, el llenado entra en bucle. */
+.iso.is-busy .iso__fill {
+    animation: iso-cycle 1.7s ease-in-out infinite;
+}
+
+@keyframes iso-rise {
+    from {
+        clip-path: inset(100% 0 0 0);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes iso-cycle {
+    0% {
+        clip-path: inset(100% 0 0 0);
+        opacity: 1;
+    }
+
+    62% {
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+
+    88% {
+        clip-path: inset(0 0 0 0);
+        opacity: 0;
+    }
+
+    100% {
+        clip-path: inset(100% 0 0 0);
+        opacity: 0;
+    }
+}
+
+/* Navegador sin soporte de máscara: se muestra el logo tal cual, sin
+   animación. Peor experiencia, pero la marca no se rompe. */
+@supports not ((-webkit-mask-image: url('#')) or (mask-image: url('#'))) {
+    .iso {
+        background: var(--iso-src) center / contain no-repeat;
+    }
+
+    .iso__base,
+    .iso__fill {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .iso__fill,
+    .iso.is-busy .iso__fill {
+        animation: none;
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+}
+
+/* ==================== TEXTOS ==================== */
+.login-title {
+    font-family: var(--font-cond);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    margin-top: 26px;
+    color: var(--paper);
+}
+
+.login-sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--teal-soft);
+    opacity: .8;
+    margin-top: 4px;
+}
+
+.rule {
+    width: 46px;
+    height: 1px;
+    background: var(--sand);
+    opacity: .65;
+    margin: 22px 0 26px;
+}
+
+/* ==================== FORMULARIO ==================== */
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.field {
+    text-align: left;
+}
+
+.field label {
+    display: block;
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--teal-soft);
+    margin-bottom: 7px;
+}
+
+.field input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 16px;
+    /* 16px evita que iOS haga zoom al enfocar el campo */
+    color: var(--paper);
+    background: rgba(244, 241, 234, .06);
+    border: 1px solid rgba(244, 241, 234, .22);
+    border-radius: var(--radius);
+    padding: 13px 14px;
+    transition: border-color .18s ease, background .18s ease;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: var(--sand);
+    background: rgba(244, 241, 234, .1);
+}
+
+.submit-btn {
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--petrol-ink);
+    background: var(--paper);
+    border: 1px solid var(--paper);
+    border-radius: var(--radius);
+    padding: 14px;
+    cursor: pointer;
+    transition: background .18s ease, color .18s ease, opacity .18s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: var(--sand);
+    border-color: var(--sand);
+}
+
+.submit-btn:disabled {
+    opacity: .55;
+    cursor: progress;
+}
+
+/* ==================== MENSAJES ==================== */
+.login-msg {
+    min-height: 20px;
+    font-size: 14px;
+    line-height: 1.45;
+    margin-top: 4px;
+    color: var(--sand);
+}
+
+.login-msg:empty {
+    margin-top: 0;
+}
+
+.login-foot {
+    margin-top: 30px;
+    font-family: var(--font-cond);
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--teal-soft);
+    opacity: .45;
+}

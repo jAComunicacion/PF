@@ -7,3 +7,4 @@ personal_count_backup_*.json
 
 .vercel
 .env*
+.gstack/

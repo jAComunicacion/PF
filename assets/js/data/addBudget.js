@@ -1,32 +1,29 @@
 async function addBudget(event) {
     event.preventDefault();
 
-    const amount = parseFloat(document.getElementById('monthly-budget-input').value);
+    const input = document.getElementById('monthly-budget-input');
+    const amount = parseFloat(input.value);
 
     if (isNaN(amount) || amount < 0) {
-        alert('Por favor, ingrese un monto válido.');
+        showToast('Ingresá un monto válido.', 'error');
         return;
     }
 
     try {
-        if (window.db) {
-            // Store as a setting using the 'key' as primary key
-            await window.db.settings.put({ key: 'monthlyBudget', value: amount });
+        // El presupuesto vivía en la tabla `settings` de IndexedDB, o sea que
+        // cada dispositivo tenía el suyo. Ahora es uno solo, en el servidor.
+        await window.api.putSetting('monthlyBudget', amount);
 
-            window.monthlyBudget = amount;
-            updateMetas();
-            closeMetasModal();
-            showToast('Meta mensual actualizada', 'success');
-        } else {
-            showToast("Error de base de datos.", 'error');
-        }
+        window.monthlyBudget = amount;
+        updateMetas();
+        closeMetasModal();
+        showToast('Meta mensual actualizada', 'success');
     } catch (e) {
-        console.error("Error saving budget: ", e);
-        showToast("Error al guardar el presupuesto.", 'error');
+        console.error('Error al guardar el presupuesto:', e);
+        showToast(e.message || 'Error al guardar el presupuesto.', 'error');
     }
 }
 
-// Set up listener for the metas form
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('metas-form');
     if (form) {

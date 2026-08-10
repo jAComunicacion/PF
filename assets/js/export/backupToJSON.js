@@ -1,18 +1,18 @@
 async function backupToJSON() {
-    if (!window.db) {
-        alert("Base de datos no inicializada.");
-        return;
-    }
-
     try {
-        const transactions = await window.db.transactions.toArray();
-        const settings = await window.db.settings.toArray();
+        // Se pide al servidor en vez de usar window.transactions: el backup
+        // tiene que ser una foto de lo que está guardado, no de lo que quedó
+        // en pantalla desde la última vez que se refrescó.
+        const [rows, settings] = await Promise.all([
+            window.api.getTransactions(),
+            window.api.getSettings()
+        ]);
 
         const backupData = {
-            version: 1,
+            version: 2,
             date: new Date().toISOString(),
-            transactions: transactions,
-            settings: settings
+            transactions: (rows || []).map(window.api.toUiTransaction),
+            settings: settings || {}
         };
 
         const fileName = `personal_count_backup_${new Date().toISOString().split('T')[0]}.json`;
@@ -52,7 +52,7 @@ async function backupToJSON() {
         document.body.removeChild(linkElement);
     } catch (e) {
         console.error("Backup failed:", e);
-        alert("Error generando el backup.");
+        alert(`Error generando el backup: ${e.message}`);
     }
 }
 
