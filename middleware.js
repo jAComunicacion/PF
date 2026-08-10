@@ -94,10 +94,14 @@ export default async function middleware(request) {
 }
 
 export const config = {
-    // Todo queda protegido salvo: la propia pantalla de ingreso, los endpoints
-    // que esa pantalla necesita para poder autenticar, y los estáticos que la
-    // pantalla carga (CSS, el isotipo, la tipografía local).
+    // El middleware cuida las PÁGINAS. La API queda fuera a propósito y se
+    // cuida sola: cada endpoint llama a isAuthenticated() y responde 401.
+    //
+    // Si el middleware interceptara /api/, una sesión vencida devolvería un
+    // redirect al HTML del login en vez de un 401. El cliente intentaría leer
+    // esa página como datos, se quedaría con una lista vacía y mostraría
+    // $0.00 — que es justo el sintoma que esta version vino a arreglar.
     matcher: [
-        '/((?!login\\.html|api/auth/login|api/auth/session|assets/|favicon\\.ico).*)'
+        '/((?!api/|login\\.html|assets/|favicon\\.ico).*)'
     ]
 };
