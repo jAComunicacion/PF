@@ -109,17 +109,11 @@
                 <button class="add-btn" onclick="openTransactionModal('expense', 'Gasto')">+</button>
             </div>
             <div class="filter-section">
+                <!-- Las opciones las carga populateCategoryFilter() desde la
+                     base. Escritas a mano acá se desfasaban de las categorías
+                     reales y filtraban por cosas que no existían. -->
                 <select id="category-filter" onchange="filterTransactions()">
                     <option value="all">Todas las categorías</option>
-                    <option value="Alimentación">Alimentación</option>
-                    <option value="Transporte">Transporte</option>
-                    <option value="Entretenimiento">Entretenimiento</option>
-                    <option value="Servicios">Servicios</option>
-                    <option value="Otros">Otros</option>
-                    <option value="Ahorro">Ahorro</option>
-                    <option value="Inversión">Inversión</option>
-                    <option value="Pago">Pago</option>
-                    <option value="Transferencia">Transferencia</option>
                 </select>
                 <div class="export-actions">
                     <button class="export-btn" onclick="exportToPDF()" title="Exportar PDF"><i
@@ -251,6 +245,7 @@
     <script src="assets/js/data/updateTransaction.js"></script>
     <script src="assets/js/data/deleteTransaction.js"></script>
     <script src="assets/js/ui/renderTransactions.js"></script>
+    <script src="assets/js/ui/populateCategoryFilter.js"></script>
     <script src="assets/js/utils/filterTransactions.js"></script>
     <script src="assets/js/ui/updateDashboard.js"></script>
     <script src="assets/js/ui/showScreen.js"></script>

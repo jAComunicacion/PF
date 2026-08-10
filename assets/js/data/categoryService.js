@@ -31,6 +31,14 @@ async function getSubcategories(parentId) {
     return all.filter(c => Number(c.parentId) === numericParentId);
 }
 
+// Las de nivel superior de los dos árboles juntas, en el orden en que las
+// devuelve el servidor. Lo usa el filtro de la lista de movimientos, que no
+// distingue entre gastos e ingresos.
+async function getParentCategories() {
+    const all = await loadCategories();
+    return all.filter(c => !c.parentId);
+}
+
 // `type` es opcional pero conviene pasarlo: hay nombres repetidos entre los dos
 // árboles (por ejemplo "Servicios" es categoría de gasto y también subcategoría
 // de "Clientes" en ingresos). Sin el tipo, la búsqueda por nombre es ambigua.
@@ -49,6 +57,7 @@ window.categoryService = {
     loadCategories,
     invalidate,
     getCategoriesByType,
+    getParentCategories,
     getSubcategories,
     getCategoryByName,
     addCategory

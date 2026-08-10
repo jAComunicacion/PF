@@ -58,6 +58,11 @@ async function initializeApp() {
         await window.seedCategories();
     }
 
+    // Después de sembrar, porque el filtro se arma con lo que hay en la base.
+    if (window.populateCategoryFilter) {
+        await window.populateCategoryFilter();
+    }
+
     const dateInput = document.getElementById('transaction-date');
     if (dateInput) {
         dateInput.valueAsDate = new Date();

@@ -8,3 +8,7 @@ personal_count_backup_*.json
 .vercel
 .env*
 .gstack/
+
+# Exports de Microsoft Money y el SQL que sale de ellos: datos financieros reales.
+*.qif
+import_*.sql

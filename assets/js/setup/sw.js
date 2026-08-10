@@ -15,7 +15,9 @@
    Estrategia actual: la red manda para navegación y API; el caché sólo guarda
    estáticos versionados (CSS, JS, imágenes). */
 
-const CACHE_NAME = 'perscount-v3';
+// v4: categorias nuevas (sale de Microsoft Money), iconos y filtro dinamico.
+// Subir el numero es lo que hace que el celular tire el cache viejo.
+const CACHE_NAME = 'perscount-v4';
 
 const ASSETS = [
     '/index.html',
