@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es-AR">
 
@@ -108,6 +109,30 @@
                 <h2 class="screen-title">Transacciones Recientes</h2>
                 <button class="add-btn" onclick="openTransactionModal('expense', 'Gasto')">+</button>
             </div>
+            <div class="search-box">
+                <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                <input type="search" id="transaction-search" autocomplete="off"
+                    placeholder="Buscar comercio, categoría…" aria-label="Buscar movimientos">
+                <button type="button" class="search-clear" id="search-clear"
+                    aria-label="Borrar búsqueda" hidden>×</button>
+            </div>
+
+            <!-- Los atajos cubren el uso de todos los días; "Entre fechas"
+                 despliega los dos campos para un período puntual. -->
+            <div class="range-tabs" id="range-tabs" role="group" aria-label="Período">
+                <button type="button" class="range-tab is-active" data-range="30d">30 días</button>
+                <button type="button" class="range-tab" data-range="mes">Este mes</button>
+                <button type="button" class="range-tab" data-range="3m">3 meses</button>
+                <button type="button" class="range-tab" data-range="ano">Este año</button>
+                <button type="button" class="range-tab" data-range="todo">Todo</button>
+                <button type="button" class="range-tab" data-range="entre">Entre fechas</button>
+            </div>
+
+            <div class="range-custom" id="range-custom" hidden>
+                <label>Desde <input type="date" id="range-from"></label>
+                <label>Hasta <input type="date" id="range-to"></label>
+            </div>
+
             <div class="filter-section">
                 <!-- Las opciones las carga populateCategoryFilter() desde la
                      base. Escritas a mano acá se desfasaban de las categorías
@@ -122,10 +147,18 @@
                             class="ph ph-floppy-disk"></i> Backup</button>
                 </div>
             </div>
+
+            <!-- Cuántos movimientos se están viendo y de qué período. Sin esto
+                 una lista recortada se confunde con una lista completa. -->
+            <p class="list-summary" id="list-summary"></p>
             <!-- ID añadido para inyectar transacciones con JS -->
             <div class="transactions-list" id="transactions-list">
                 <!-- Las transacciones se renderizan aquí -->
             </div>
+
+            <!-- Aparece sólo si el período elegido tiene más de los que se
+                 dibujan de una. Evita colgar la pantalla con "Todo". -->
+            <button type="button" class="show-more-btn" id="show-more-btn" hidden></button>
         </div>
 
         <!-- Pantalla de Gráficos -->
@@ -230,6 +263,7 @@
     <script src="assets/js/data/api.js"></script>
     <script src="assets/js/utils/globals.js"></script>
     <script src="assets/js/data/categoryService.js"></script>
+    <script src="assets/js/data/transactionFilters.js"></script>
     <script src="assets/js/data/seedCategories.js"></script>
     <script src="assets/js/utils/formatCurrency.js"></script>
     <script src="assets/js/setup/setupAuth.js"></script>
@@ -264,6 +298,7 @@
     <script src="assets/js/export/backupToJSON.js"></script>
     <script src="assets/js/ui/toast.js"></script>
     <script src="assets/js/setup/logout.js"></script>
+    <script src="assets/js/setup/setupListFilters.js"></script>
     <script src="assets/js/setup/initializeApp.js"></script>
 </body>
 

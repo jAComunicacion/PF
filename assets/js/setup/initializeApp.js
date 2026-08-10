@@ -49,6 +49,7 @@ async function initializeApp() {
     setupNavigationListeners();
     setupFormListeners();
     setupActionButtons();
+    if (window.setupListFilters) setupListFilters();
 
     if (window.setupAuth) setupAuth();
 

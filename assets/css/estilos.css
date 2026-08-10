@@ -590,6 +590,200 @@ select {
 }
 
 /* ==================== FILTROS ==================== */
+/* ---------- Buscador y período ----------
+   Con el historial de Money adentro, la lista pasó de una docena de
+   movimientos a varios cientos: sin buscador ni recorte por fecha no se
+   podía encontrar nada. Los controles se leen como el encabezado de una
+   planilla, no como una barra de aplicación. */
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--petrol);
+}
+
+.search-box .ph {
+    color: var(--petrol);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+#transaction-search {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 16px;
+    /* 16px o más: abajo de eso, iOS hace zoom al enfocar el campo. */
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    padding: 9px 8px;
+    min-width: 0;
+}
+
+#transaction-search::placeholder {
+    color: var(--ink-mute);
+}
+
+#transaction-search:focus {
+    outline: none;
+}
+
+.search-box:focus-within {
+    border-bottom-color: var(--petrol-deep);
+}
+
+/* El navegador pone su propia cruz en los input[type=search] y quedarían dos. */
+#transaction-search::-webkit-search-cancel-button {
+    display: none;
+}
+
+.search-clear {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink-mute);
+    background: transparent;
+    border: none;
+    padding: 0 4px;
+    cursor: pointer;
+}
+
+.search-clear:hover {
+    color: var(--expense);
+}
+
+/* El atributo hidden del HTML es display:none, pero cualquier display
+   explícito en una clase le gana. Sin esto, los campos de fecha y el botón
+   "ver más" se ven siempre. */
+[hidden] {
+    display: none !important;
+}
+
+.range-tabs {
+    display: flex;
+    gap: 6px;
+    /* Se acomodan en dos filas en el celular. Con scroll horizontal el último
+       botón quedaba cortado y parecía un error, no un control. */
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.range-tab {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-body);
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.range-tab:hover {
+    border-color: var(--petrol);
+    color: var(--petrol);
+}
+
+.range-tab.is-active {
+    color: #fff;
+    background: var(--petrol);
+    border-color: var(--petrol);
+}
+
+.range-custom {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.range-custom label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    /* Los dos campos comparten fila cuando entran, y se apilan cuando no. */
+    flex: 1 1 150px;
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-body);
+}
+
+.range-custom input {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: 6px 9px;
+}
+
+.range-custom input:focus {
+    outline: none;
+    border-color: var(--petrol);
+}
+
+/* Cuántos movimientos se ven y de qué período. Sin esta línea, una lista
+   recortada se confunde con la lista completa. */
+.list-summary {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .05em;
+    color: var(--ink-mute);
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.list-summary:empty {
+    display: none;
+}
+
+.empty-hint {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-mute);
+    text-align: center;
+    padding: 26px 12px;
+    margin: 0;
+}
+
+.show-more-btn {
+    display: block;
+    width: 100%;
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--petrol);
+    background: transparent;
+    border: 1px solid var(--petrol);
+    border-radius: var(--radius);
+    padding: 11px;
+    margin-top: 14px;
+    cursor: pointer;
+    transition: color .2s ease, background .2s ease;
+}
+
+.show-more-btn:hover {
+    color: #fff;
+    background: var(--petrol);
+}
+
 .filter-section {
     display: flex;
     align-items: center;
