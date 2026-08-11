@@ -110,10 +110,20 @@ function renderInformeMensual() {
     contenedor.appendChild(tabla);
 }
 
+// Dibuja las tres piezas de la solapa. La estacionalidad no depende del rango
+// -mira todo el historial- pero se redibuja igual para no dejar la pantalla a
+// medio armar si alguna vez se entra directo acá.
+function renderInformes() {
+    renderInformeMensual();
+    if (window.renderInteranual) renderInteranual();
+    if (window.renderEstacionalidad) renderEstacionalidad();
+}
+
 function cambiarRangoInforme(meses) {
     window.informeMeses = Number(meses) || 3;
-    renderInformeMensual();
+    renderInformes();
 }
 
 window.renderInformeMensual = renderInformeMensual;
+window.renderInformes = renderInformes;
 window.cambiarRangoInforme = cambiarRangoInforme;

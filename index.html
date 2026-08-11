@@ -36,7 +36,7 @@
                     <img src="assets/logos/jacomunicacion.jpg" alt="jA Comunicación" id="profile-img">
                 </div>
                 <div class="profile-info">
-                    <h1 class="greeting" title="Clic para editar nombre">¡Hola, <span id="user-name">Invitado</span>!
+                    <h1 class="greeting" title="Tocá para editar el nombre">¡Hola, <span id="user-name">Julio</span>!
                     </h1>
                     <p class="subtitle">Bienvenido de nuevo</p>
                 </div>
@@ -238,6 +238,24 @@
                 <p class="informe-vacio-msg" id="informe-vacio" hidden>
                     Todavía no hay movimientos en este período.
                 </p>
+
+                <!-- Contra el año pasado. El número que compara es el peso
+                     porcentual, no los pesos: con la inflación, "gastaste 90%
+                     más" es cierto y a la vez inútil. -->
+                <div class="screen-header analisis-header">
+                    <h2 class="screen-title">Contra el Año Pasado</h2>
+                </div>
+                <div id="interanual-tabla"></div>
+                <p class="informe-vacio-msg" id="interanual-vacio" hidden></p>
+
+                <!-- Qué meses pegan fuerte, medido en participación sobre el
+                     año y no en pesos, para que valga igual en 2021 que hoy. -->
+                <div class="screen-header analisis-header">
+                    <h2 class="screen-title">Tus Meses</h2>
+                </div>
+                <p class="estacion-resumen" id="estacionalidad-resumen"></p>
+                <div id="estacionalidad-barras"></div>
+                <p class="informe-vacio-msg" id="estacionalidad-vacio" hidden></p>
             </div>
         </div>
 
@@ -360,6 +378,9 @@
          las variantes de un mismo comercio. -->
     <script src="assets/js/data/calcularGastosFijos.js"></script>
     <script src="assets/js/data/calcularInformeMensual.js"></script>
+    <!-- Las dos se apoyan en el motor del informe mensual, asi que van despues. -->
+    <script src="assets/js/data/calcularInteranual.js"></script>
+    <script src="assets/js/data/calcularEstacionalidad.js"></script>
     <script src="assets/js/ui/setupBalanceTabs.js"></script>
     <script src="assets/js/ui/openTransactionModal.js"></script>
     <script src="assets/js/ui/closeTransactionModal.js"></script>
@@ -383,6 +404,7 @@
     <script src="assets/js/ui/renderChart.js"></script>
     <script src="assets/js/ui/renderMonthCompareChart.js"></script>
     <script src="assets/js/ui/renderInformeMensual.js"></script>
+    <script src="assets/js/ui/renderAnalisis.js"></script>
     <script src="assets/js/ui/setupChartsTabs.js"></script>
     <script src="assets/js/ui/openMetasModal.js"></script>
     <script src="assets/js/ui/closeMetasModal.js"></script>

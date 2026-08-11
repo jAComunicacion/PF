@@ -1,9 +1,13 @@
 // Local Auth & Profile Management
 // Handles user identity (mock) and persistent profile settings (Name/Photo)
 
+// El nombre por defecto es el del dueño de la app, que hoy es un solo usuario.
+// La costura para terceros ya existe y no hay que tocar nada acá: el ajuste
+// `userName` guardado en el servidor pisa este valor, y se edita tocando el
+// saludo. Cuando la app sea multiusuario, cada cuenta trae el suyo.
 const defaultUser = {
     uid: "local-user-v1",
-    displayName: "Invitado",
+    displayName: "Julio",
     photoURL: "assets/logos/jacomunicacion.jpg",
     email: "local@app.com"
 };
@@ -56,14 +60,10 @@ function setupAuth() {
         });
     }
 
-    // Proactive hint if user is still "Invitado"
-    if (defaultUser.displayName === 'Invitado') {
-        setTimeout(() => {
-            if (typeof showToast === 'function') {
-                showToast('Tip: Haz clic en "Hola, Invitado" para poner tu nombre.', 'info');
-            }
-        }, 2000);
-    }
+    // Se sacó el aviso de "poné tu nombre". Existía para empujar al usuario
+    // fuera de "Invitado" y ya no hace falta: la app arranca con el nombre
+    // puesto. Además saltaba cada vez que se abría, porque la comprobación
+    // corría antes de que llegara el nombre guardado del servidor.
 
     console.log("Sistema de autenticación y perfil local inicializado.");
 }

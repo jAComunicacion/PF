@@ -19,7 +19,7 @@ function showChartsView(view) {
     if (view === 'comparativa') {
         if (window.renderMonthCompareChart) renderMonthCompareChart();
     } else if (view === 'informe') {
-        if (window.renderInformeMensual) renderInformeMensual();
+        if (window.renderInformes) renderInformes();
     } else if (window.renderChart) {
         renderChart();
     }

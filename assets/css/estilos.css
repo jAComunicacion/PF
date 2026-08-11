@@ -1561,6 +1561,170 @@ select {
     color: var(--ink-mute);
 }
 
+/* ==================== CONTRA EL AÑO PASADO ====================
+   Cada celda lleva dos cifras: el monto nominal y el peso porcentual sobre su
+   propio período. El peso es el que compara — con la inflación argentina el
+   monto solo no dice si se gastó más o si todo aumentó. */
+.analisis-header {
+    margin-top: 34px;
+}
+
+.interanual-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+.interanual-tabla caption {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--petrol);
+    text-align: left;
+    padding-bottom: 8px;
+}
+
+.interanual-tabla th,
+.interanual-tabla td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--rule);
+    text-align: right;
+    vertical-align: top;
+}
+
+.interanual-tabla thead th {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 400;
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.interanual-tabla th[scope="row"],
+.interanual-tabla thead th:first-child {
+    text-align: left;
+    font-weight: 400;
+    color: var(--ink-body);
+}
+
+.interanual-tabla .monto {
+    display: block;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+}
+
+.interanual-tabla .peso {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Puntos porcentuales, no "% más": pasar de 11% a 18% son 7 puntos. */
+.interanual-tabla .puntos {
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.interanual-tabla .puntos.is-sube {
+    color: var(--expense);
+}
+
+.interanual-tabla .puntos.is-baja {
+    color: var(--income);
+}
+
+/* ==================== TUS MESES (estacionalidad) ====================
+   Barras horizontales con la participación de cada mes en el año. Se prefirió
+   esto a un gráfico: doce nombres de mes en un eje de celular no se leen. */
+.estacion-resumen {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-body);
+    border-left: 3px solid var(--sand);
+    padding-left: 14px;
+    margin-bottom: 18px;
+}
+
+.estacion-resumen:empty {
+    display: none;
+}
+
+.estacion-fila {
+    display: grid;
+    grid-template-columns: 78px 1fr 52px;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+.estacion-mes {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-body);
+}
+
+.estacion-barra {
+    display: block;
+    height: 10px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.estacion-barra>span {
+    display: block;
+    height: 100%;
+    background: var(--sand);
+}
+
+/* Terracota para el mes que se lleva más que un mes parejo: la misma
+   semántica del gasto que usa el resto de la app. */
+.estacion-fila.is-pesado .estacion-barra>span {
+    background: var(--expense);
+}
+
+.estacion-fila.is-pesado .estacion-mes {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+/* Sin dos años de muestras no hay patrón, hay una anécdota. */
+.estacion-fila.is-flojo {
+    opacity: .45;
+}
+
+.estacion-fila.is-proximo {
+    background: var(--card-alt);
+    border-radius: var(--radius);
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.estacion-valor {
+    text-align: right;
+    font-size: 13px;
+    color: var(--ink-body);
+    font-variant-numeric: tabular-nums;
+}
+
+.estacion-nota {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+}
+
 /* ==================== ACCESIBILIDAD ==================== */
 :focus-visible {
     outline: 2px solid var(--petrol);
