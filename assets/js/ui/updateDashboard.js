@@ -1,11 +1,28 @@
 function updateDashboard() {
-    const balance = calculateBalance();
     const healthScore = calculateHealthScore();
 
-    // Update balance display
+    // Solapa "Total": el período lo elige el usuario. Antes sumaba los cinco
+    // años del historial y mostraba un "+0%" escrito a mano en el HTML que
+    // nunca se calculaba.
+    const resumen = window.rangeSummary.calculateRangeSummary(
+        window.transactions || [],
+        window.balanceRange || '30d'
+    );
+
     const totalBalanceEl = document.getElementById('current-balance');
-    if (totalBalanceEl) {
-        totalBalanceEl.textContent = formatCurrency(balance);
+    if (totalBalanceEl) totalBalanceEl.textContent = formatCurrency(resumen.balance);
+
+    const rangeLabelEl = document.getElementById('range-label');
+    const rangeIncomeEl = document.getElementById('range-income');
+    const rangeExpenseEl = document.getElementById('range-expense');
+    const rangeCountEl = document.getElementById('range-count');
+    if (rangeLabelEl) rangeLabelEl.textContent = resumen.etiqueta;
+    if (rangeIncomeEl) rangeIncomeEl.textContent = formatCurrency(resumen.income, 'income');
+    if (rangeExpenseEl) rangeExpenseEl.textContent = formatCurrency(resumen.expense, 'expense');
+    if (rangeCountEl) {
+        rangeCountEl.textContent = resumen.cantidad === 1
+            ? '1 movimiento'
+            : `${resumen.cantidad} movimientos`;
     }
 
     // Solapa "Este Mes": lo que se ve al abrir la app.
@@ -40,4 +57,10 @@ function triggerShine(selector) {
     }
 }
 
+function cambiarRangoSaldo(rango) {
+    window.balanceRange = rango;
+    updateDashboard();
+}
+
 window.updateDashboard = updateDashboard;
+window.cambiarRangoSaldo = cambiarRangoSaldo;

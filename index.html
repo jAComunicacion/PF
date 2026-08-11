@@ -66,12 +66,34 @@
                 </div>
             </div>
 
+            <!-- El período se elige, con los mismos rangos que la lista de
+                 movimientos. Arranca en 30 días: con cinco años importados, la
+                 suma de todo el historial dejó de responder "cuánta plata
+                 tengo". "Todo" sigue estando para quien lo quiera. -->
             <div class="balance-card" id="balance-view-total" hidden>
-                <p class="balance-label">Saldo Total</p>
-                <!-- ID corregido a current-balance para coincidir con JS -->
+                <div class="balance-head">
+                    <p class="balance-label" id="range-label">Últimos 30 días</p>
+                    <select id="balance-range" aria-label="Período del saldo"
+                        onchange="cambiarRangoSaldo(this.value)">
+                        <option value="30d">30 días</option>
+                        <option value="mes">Este mes</option>
+                        <option value="3m">3 meses</option>
+                        <option value="ano">Este año</option>
+                        <option value="todo">Todo</option>
+                    </select>
+                </div>
                 <h2 class="balance-amount" id="current-balance">$0.00</h2>
-                <!-- balance-change se actualizará con JS, pero la lógica de % de cambio no estaba en tu JS -->
-                <p class="balance-change">+0%</p>
+                <div class="month-stats">
+                    <div class="month-stat">
+                        <span class="month-stat-label">Ingresos</span>
+                        <span class="month-stat-value is-income" id="range-income">$0.00</span>
+                    </div>
+                    <div class="month-stat">
+                        <span class="month-stat-label">Gastos</span>
+                        <span class="month-stat-value is-expense" id="range-expense">$0.00</span>
+                    </div>
+                </div>
+                <p class="balance-change" id="range-count"></p>
             </div>
 
             <div class="action-buttons">
@@ -371,6 +393,7 @@
     <script src="assets/js/setup/setupAuth.js"></script>
     <script src="assets/js/utils/getCategoryIcon.js"></script>
     <script src="assets/js/data/calculateBalance.js"></script>
+    <script src="assets/js/data/calculateRangeSummary.js"></script>
     <script src="assets/js/data/calculateHealthScore.js"></script>
     <script src="assets/js/data/calculateMonthSummary.js"></script>
     <script src="assets/js/data/calculateLastMonths.js"></script>

@@ -1561,6 +1561,32 @@ select {
     color: var(--ink-mute);
 }
 
+/* Selector de período del saldo. Va sobre el verde petróleo de la tarjeta,
+   así que hereda tinta clara y borde tenue en vez del select normal. */
+.balance-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.balance-head select {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .3);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+}
+
+.balance-head select option {
+    color: var(--ink-body);
+    background: var(--card);
+}
+
 /* ==================== CONTRA EL AÑO PASADO ====================
    Cada celda lleva dos cifras: el monto nominal y el peso porcentual sobre su
    propio período. El peso es el que compara — con la inflación argentina el
