@@ -288,6 +288,24 @@
                 <button class="close-btn" onclick="closeMetasModal()">×</button>
             </div>
             <div class="modal-body">
+                <!-- La app propone el numero a partir del historial en vez de
+                     pedir que se invente uno. Aceptar lo guarda tal cual;
+                     Editar deja el campo a mano con el sugerido precargado. -->
+                <div class="budget-suggestion" id="budget-suggestion" hidden>
+                    <p class="suggestion-label">Segun tus ultimos meses, tu presupuesto seria</p>
+                    <p class="suggestion-amount" id="suggestion-amount">$0</p>
+                    <p class="suggestion-detail" id="suggestion-detail"></p>
+                    <details class="suggestion-breakdown" id="suggestion-breakdown">
+                        <summary>Ver los gastos fijos detectados</summary>
+                        <ul id="suggestion-fixed-list"></ul>
+                        <p class="suggestion-math" id="suggestion-math"></p>
+                    </details>
+                    <div class="suggestion-actions">
+                        <button type="button" class="submit-btn" id="btn-accept-suggestion">Aceptar</button>
+                        <button type="button" class="secondary-btn" id="btn-edit-suggestion">Editar</button>
+                    </div>
+                </div>
+
                 <form id="metas-form">
                     <div class="form-group">
                         <label for="monthly-budget-input">Presupuesto Mensual (ARS)</label>
@@ -316,6 +334,9 @@
     <script src="assets/js/data/calculateHealthScore.js"></script>
     <script src="assets/js/data/calculateMonthSummary.js"></script>
     <script src="assets/js/data/calculateLastMonths.js"></script>
+    <!-- Va despues de transactionFilters: reusa su normalizar() para agrupar
+         las variantes de un mismo comercio. -->
+    <script src="assets/js/data/calcularGastosFijos.js"></script>
     <script src="assets/js/ui/setupBalanceTabs.js"></script>
     <script src="assets/js/ui/openTransactionModal.js"></script>
     <script src="assets/js/ui/closeTransactionModal.js"></script>

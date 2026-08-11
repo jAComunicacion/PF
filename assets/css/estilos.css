@@ -1317,6 +1317,113 @@ select {
     transform: scale(.99);
 }
 
+/* ==================== PRESUPUESTO SUGERIDO ====================
+   La app calcula el presupuesto desde el historial y lo propone. La cifra
+   se trata como las otras cifras del sistema: condensada, grande, tabular.
+   El desglose va plegado — está para dar confianza en el número, no para
+   leerse todos los días. */
+.budget-suggestion {
+    border-left: 3px solid var(--petrol);
+    background: var(--card-alt);
+    border-radius: var(--radius);
+    padding: 18px;
+}
+
+.suggestion-label {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.suggestion-amount {
+    font-family: var(--font-cond);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--petrol);
+    font-variant-numeric: tabular-nums;
+    margin: 4px 0;
+}
+
+.suggestion-detail {
+    font-size: 14px;
+    color: var(--ink-body);
+    line-height: 1.5;
+}
+
+.suggestion-breakdown {
+    margin-top: 14px;
+    border-top: 1px solid var(--rule);
+    padding-top: 12px;
+}
+
+.suggestion-breakdown summary {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--petrol);
+    cursor: pointer;
+}
+
+.suggestion-breakdown ul {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+}
+
+.suggestion-breakdown li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+    color: var(--ink-body);
+    font-variant-numeric: tabular-nums;
+}
+
+.suggestion-math {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+}
+
+.suggestion-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.suggestion-actions .submit-btn {
+    margin-top: 0;
+}
+
+/* Aceptar es la acción principal y Editar la salida. Se distinguen por
+   peso, no por color de alarma: editar el presupuesto no es un error. */
+.secondary-btn {
+    width: 100%;
+    font-family: var(--font-cond);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--petrol);
+    background: transparent;
+    border: 1px solid var(--petrol);
+    border-radius: var(--radius);
+    padding: 14px;
+    transition: background .2s ease, color .2s ease;
+}
+
+.secondary-btn:hover {
+    background: var(--petrol);
+    color: #fff;
+}
+
 /* ==================== ACCESIBILIDAD ==================== */
 :focus-visible {
     outline: 2px solid var(--petrol);

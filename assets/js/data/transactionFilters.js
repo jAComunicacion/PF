@@ -129,6 +129,12 @@ if (typeof window !== 'undefined') {
         aplicarFiltros,
         describirRango,
         coincideTexto,
+        // normalizar solo se exportaba a Node. calcularGastosFijos agrupa los
+        // gastos por nombre y necesita la MISMA normalizacion que el buscador:
+        // si "Farmacia Suárez" y "farmacia suarez" no colapsan en una sola
+        // clave, cada variante cuenta por separado y ninguna llega al minimo
+        // de meses para considerarse un gasto fijo.
+        normalizar,
         mesActual,
         esDelMes
     };
