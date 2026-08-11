@@ -4,15 +4,22 @@ function showChartsView(view) {
         btn.classList.toggle('is-active', btn.dataset.chartsView === view);
     });
 
-    const categoriaView = document.getElementById('charts-view-categoria');
-    const comparativaView = document.getElementById('charts-view-comparativa');
-    if (categoriaView) categoriaView.hidden = view !== 'categoria';
-    if (comparativaView) comparativaView.hidden = view !== 'comparativa';
+    const vistas = {
+        categoria: document.getElementById('charts-view-categoria'),
+        comparativa: document.getElementById('charts-view-comparativa'),
+        informe: document.getElementById('charts-view-informe')
+    };
+
+    Object.entries(vistas).forEach(([nombre, elemento]) => {
+        if (elemento) elemento.hidden = nombre !== view;
+    });
 
     window.chartsView = view;
 
     if (view === 'comparativa') {
         if (window.renderMonthCompareChart) renderMonthCompareChart();
+    } else if (view === 'informe') {
+        if (window.renderInformeMensual) renderInformeMensual();
     } else if (window.renderChart) {
         renderChart();
     }

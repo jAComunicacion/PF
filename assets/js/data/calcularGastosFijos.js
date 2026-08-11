@@ -173,7 +173,7 @@
     // no tiene forma de saber si confiar.
     function describirSugerencia(resultado) {
         if (!resultado || resultado.sugerido === null) {
-            return 'Todavia no hay movimientos suficientes para sugerir un presupuesto.';
+            return 'Todavía no hay movimientos suficientes para sugerir un presupuesto.';
         }
 
         const cantidad = resultado.fijos.length;
@@ -185,7 +185,7 @@
             return `Sin gastos fijos detectados en ${parteMeses}. La sugerencia es tu gasto habitual.`;
         }
 
-        return `${parteFijos} detectados sobre ${parteMeses}, mas tu margen variable habitual.`;
+        return `${parteFijos} detectados sobre ${parteMeses}, más tu margen variable habitual.`;
     }
 
     const api = { calcularGastosFijos, describirSugerencia, mediana, mesesCompletosPrevios };

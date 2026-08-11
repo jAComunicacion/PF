@@ -1424,6 +1424,143 @@ select {
     color: #fff;
 }
 
+/* ==================== INFORME MENSUAL ====================
+   La matriz de Money: meses en columnas, categoría › subcategoría en filas.
+   Es la pieza más "planilla" de la app y el sistema "Libro mayor" le viene
+   natural: condensada, cifras tabulares, filetes finos, cero relleno. */
+.informe-scroll {
+    /* Con 12 columnas la tabla no entra en un teléfono. El scroll vive acá
+       dentro para que la página nunca se mueva de costado. */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--card);
+}
+
+.informe-mensual {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.informe-mensual th,
+.informe-mensual td {
+    padding: 8px 12px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--rule);
+}
+
+/* La primera columna queda fija: sin esto, al desplazarse a la derecha no se
+   sabe qué fila se está leyendo y la tabla deja de informar. */
+.informe-mensual th[scope="row"],
+.informe-mensual thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    text-align: left;
+    background: var(--card);
+    font-weight: 400;
+    color: var(--ink-body);
+}
+
+.informe-mensual thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--card-alt);
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.informe-mensual thead th:first-child {
+    z-index: 3;
+    background: var(--card-alt);
+}
+
+/* "Ingresos" / "Gastos". Ocupa todo el ancho de la tabla, así que hereda el
+   text-align:right de las cifras y el rótulo se iba a cientos de píxeles a la
+   derecha, fuera de la vista. Va a la izquierda y pegajoso, para que siga
+   visible cuando la tabla se desplaza. */
+.informe-titulo-seccion th {
+    position: sticky;
+    left: 0;
+    text-align: left;
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--petrol);
+    background: var(--card-alt) !important;
+    padding-top: 14px;
+}
+
+/* La categoría es un rótulo de grupo, sin cifras propias: las suyas están en
+   el subtotal, abajo del grupo, como en Money. */
+.informe-categoria th {
+    font-family: var(--font-cond);
+    font-size: 15px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-top: 12px;
+}
+
+.informe-sub th {
+    padding-left: 26px;
+    color: var(--ink-body);
+}
+
+.informe-subtotal th,
+.informe-subtotal td {
+    font-weight: 600;
+    color: var(--petrol);
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.informe-total th,
+.informe-total td {
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 2px solid var(--rule-strong);
+}
+
+.informe-balance th,
+.informe-balance td {
+    font-family: var(--font-cond);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--income);
+    background: var(--card-alt);
+    border-bottom: none;
+}
+
+.informe-balance td.is-negativo {
+    color: var(--expense);
+}
+
+/* Una celda vacía y una en cero dicen cosas distintas: el hueco es lo que
+   muestra que un cliente dejó de facturar. No se rellena. */
+.informe-vacia {
+    color: transparent;
+}
+
+.informe-vacio-msg {
+    padding: 28px 4px;
+    text-align: center;
+    color: var(--ink-mute);
+}
+
 /* ==================== ACCESIBILIDAD ==================== */
 :focus-visible {
     outline: 2px solid var(--petrol);

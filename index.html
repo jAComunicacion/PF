@@ -188,6 +188,7 @@
             <div class="range-tabs charts-tabs" id="charts-tabs" role="group" aria-label="Vista de gráficas">
                 <button type="button" class="range-tab is-active" data-charts-view="categoria">Por Categoría</button>
                 <button type="button" class="range-tab" data-charts-view="comparativa">Comparativa 3 Meses</button>
+                <button type="button" class="range-tab" data-charts-view="informe">Informes</button>
             </div>
 
             <div id="charts-view-categoria">
@@ -216,6 +217,27 @@
                     <!-- Se inyecta con Chart.js -->
                 </div>
                 <div class="chart-legend" id="compare-legend"></div>
+            </div>
+
+            <!-- Réplica del informe "Monthly income and expenses" de Microsoft
+                 Money: meses en columnas, categoría › subcategoría en filas.
+                 Es la pantalla desde la que Julio saca sus conclusiones. -->
+            <div id="charts-view-informe" hidden>
+                <div class="screen-header">
+                    <h2 class="screen-title">Ingresos y Gastos por Mes</h2>
+                    <select id="informe-range-filter" onchange="cambiarRangoInforme(this.value)">
+                        <option value="3">3 meses</option>
+                        <option value="6">6 meses</option>
+                        <option value="12">1 año</option>
+                    </select>
+                </div>
+                <!-- El scroll horizontal vive acá y no en el body: con 12
+                     columnas la tabla no entra en un celular, pero la página
+                     no tiene que moverse de costado. -->
+                <div class="informe-scroll" id="informe-tabla"></div>
+                <p class="informe-vacio-msg" id="informe-vacio" hidden>
+                    Todavía no hay movimientos en este período.
+                </p>
             </div>
         </div>
 
@@ -292,7 +314,7 @@
                      pedir que se invente uno. Aceptar lo guarda tal cual;
                      Editar deja el campo a mano con el sugerido precargado. -->
                 <div class="budget-suggestion" id="budget-suggestion" hidden>
-                    <p class="suggestion-label">Segun tus ultimos meses, tu presupuesto seria</p>
+                    <p class="suggestion-label">Según tus últimos meses, tu presupuesto sería</p>
                     <p class="suggestion-amount" id="suggestion-amount">$0</p>
                     <p class="suggestion-detail" id="suggestion-detail"></p>
                     <details class="suggestion-breakdown" id="suggestion-breakdown">
@@ -337,6 +359,7 @@
     <!-- Va despues de transactionFilters: reusa su normalizar() para agrupar
          las variantes de un mismo comercio. -->
     <script src="assets/js/data/calcularGastosFijos.js"></script>
+    <script src="assets/js/data/calcularInformeMensual.js"></script>
     <script src="assets/js/ui/setupBalanceTabs.js"></script>
     <script src="assets/js/ui/openTransactionModal.js"></script>
     <script src="assets/js/ui/closeTransactionModal.js"></script>
@@ -359,6 +382,7 @@
     <script src="assets/js/ui/renderLegend.js"></script>
     <script src="assets/js/ui/renderChart.js"></script>
     <script src="assets/js/ui/renderMonthCompareChart.js"></script>
+    <script src="assets/js/ui/renderInformeMensual.js"></script>
     <script src="assets/js/ui/setupChartsTabs.js"></script>
     <script src="assets/js/ui/openMetasModal.js"></script>
     <script src="assets/js/ui/closeMetasModal.js"></script>
