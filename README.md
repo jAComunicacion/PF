@@ -78,6 +78,55 @@ Destino: el que indique Vercel (Settings → Domains), típicamente
 **Los registros MX no se tocan.** El correo sigue en Ferozo y de eso depende
 la ingesta (ver `spec.md`, "Recepción de email").
 
+## Alta de un cliente nuevo (modelo "instancia por cliente")
+
+Este repo no es multi-tenant: no hay tabla de usuarios ni aislamiento de
+datos por cuenta (ver `db/001_init.sql`). Para vender esto a otro cliente
+(pyme o profesional autónomo) **no se agregan cuentas dentro de esta
+instancia** — se clona el patrón completo, igual al que ya corre para
+`finanzas.jacomunicacion.com.ar`. Cada cliente queda con su propia base
+de datos y su propio deploy: cero código compartido, cero riesgo de que un
+cliente vea datos de otro.
+
+Checklist, en orden:
+
+1. **Base de datos**
+   - Crear un proyecto nuevo en Neon.
+   - Copiar la connection string.
+   - Correr contra esa base, en orden: `db/001_init.sql`, luego
+     `db/002_settings.sql`.
+   - Sembrar las categorías por defecto (`api/categories/seed.js` /
+     `api/_lib/defaultCategories.js`) — se dispara solo la primera vez que
+     el frontend pide categorías y la tabla está vacía.
+
+2. **Deploy**
+   - Importar este repo como proyecto nuevo en Vercel (o duplicar el
+     existente).
+   - Configurar las env vars propias del cliente: `DATABASE_URL` (de este
+     Neon nuevo), `APP_PASSWORD` (contraseña propia del cliente, no
+     reusar la de otro), `SESSION_SECRET` (generar uno nuevo, ver tabla de
+     variables más arriba — nunca reusar el de otra instancia).
+
+3. **Dominio**
+   - Subdominio bajo el dominio de jA: `<cliente>.jacomunicacion.com.ar`
+     (mismo mecanismo que `finanzas.jacomunicacion.com.ar`, ver sección
+     "Despliegue y dominio").
+   - CNAME en la zona DNS apuntando a Vercel — no crear el subdominio en
+     el hosting de dominios, o apunta al lugar equivocado.
+
+4. **Entrega**
+   - Pasarle al cliente la URL y su `APP_PASSWORD`.
+   - Cargar (o pedirle que cargue) sus primeros movimientos para validar
+     que categorías, presupuesto e informes calculan bien con datos reales
+     de esa cuenta.
+
+**Cuándo dejar de repetir este proceso a mano:** si el número de clientes
+crece al punto de que aplicar el mismo fix en N deploys separados cuesta
+más tiempo por mes que construir aislamiento compartido (tabla `users` +
+`user_id` en cada tabla + Row-Level Security en Postgres + sesión con
+identidad en `api/_lib/auth.js`), ahí sí vale migrar a un modelo
+multi-tenant real. No antes.
+
 ## Instalar y testear
 
 ```

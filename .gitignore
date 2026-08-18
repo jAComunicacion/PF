@@ -12,3 +12,6 @@ personal_count_backup_*.json
 # Exports de Microsoft Money y el SQL que sale de ellos: datos financieros reales.
 *.qif
 import_*.sql
+
+# Capturas del driver de /run-personal-count: se regeneran en cada corrida.
+.claude/skills/run-personal-count/screenshots/
