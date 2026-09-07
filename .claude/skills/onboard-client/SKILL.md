@@ -22,11 +22,18 @@ las trampas reales que aparecieron la primera vez, y el branding.
 No asumir nada de esto — confirmarlo primero (siguiendo el patrón de
 "hacé preguntas hasta acordar" que ya usa Julio en estas sesiones):
 
-1. **Subdominio**: ¿bajo el dominio del cliente (`finanzas.<cliente>.com`,
-   recomendado si jA administra ese DNS) o bajo `jacomunicacion.com.ar`? Ver
-   el razonamiento ya dado una vez: la identidad del cliente es la
-   prioritaria (jArismendi® trabaja "de la empresa hacia el mercado"), así
-   que por defecto va bajo el dominio del cliente.
+1. **Subdominio**: no hay un default único — van a darse los dos casos, así
+   que son dos líneas de acción distintas, a elegir según el cliente:
+   - **Línea A — bajo el dominio del cliente** (`finanzas.<cliente>.com`):
+     la opción preferida cuando jA administra el DNS de ese dominio (caso
+     Miriam Schild). La identidad del cliente es la prioritaria
+     (jArismendi® trabaja "de la empresa hacia el mercado"), así que esta
+     es la primera que se ofrece.
+   - **Línea B — bajo `jacomunicacion.com.ar`** (`<cliente>.jacomunicacion.com.ar`):
+     cuando jA no administra el DNS del cliente, o el cliente todavía no
+     tiene dominio propio, o prefiere no exponer esta herramienta bajo su
+     propia marca.
+   Preguntarle a Julio cuál aplica — no asumir la línea A por default.
 2. **¿Quién administra el DNS de ese dominio?** Si es Donweb/Hostmar (caso
    Miriam Schild), el panel de "Crear subdominio" no es un editor de DNS
    directo — es un wizard con "Acción: Redireccionar a...". La opción
@@ -35,14 +42,17 @@ No asumir nada de esto — confirmarlo primero (siguiendo el patrón de
    más parecido a un CNAME).
 3. **Categorías**: ¿las por defecto del seed, o hace falta relevar un plan
    de categorías a medida con el cliente?
-4. **Assets de marca**: pedir el color de acento (un solo hex alcanza,
-   ver más abajo cómo se derivan los demás) y el logo del cliente. Buscar
-   primero en la carpeta del cliente en disco (`E:\CLIENTES\...` o
-   `E:\jA COMUNICACION Diseño & Marketing\...`) — casi siempre ya existe
-   un favicon o isotipo circular de una web/etiqueta/redes sociales
-   armado previamente. Preferir una versión ya pensada para verse chica
-   (favicon, ícono de WhatsApp) por sobre un logotipo horizontal ancho:
-   el único lugar donde se usa es el avatar circular de 54px.
+4. **Assets de marca — entregable de Julio**: `CLIENT_NAME`,
+   `CLIENT_ACCENT_COLOR` y `CLIENT_LOGO_URL` (los tres valores, ver
+   "Branding" más abajo) son un entregable que aporta Julio de entrada
+   para arrancar la configuración — no algo que la skill deba salir a
+   inferir por su cuenta. Pedirlos antes de tocar env vars.
+   Si Julio dice que hay que buscarlo, la carpeta del cliente en disco
+   (`E:\CLIENTES\...` o `E:\jA COMUNICACION Diseño & Marketing\...`) suele
+   tener ya un favicon o isotipo circular de una web/etiqueta/redes
+   sociales armado previamente — preferir esa versión (pensada para verse
+   chica) por sobre un logotipo horizontal ancho, ya que el único lugar
+   donde se usa es el avatar circular de 54px.
 
 ## Infraestructura (Neon + Vercel + DNS)
 
@@ -93,7 +103,7 @@ expuestas al frontend por dos endpoints (`/api/settings`, autenticado,
 para `index.html`; `/api/branding`, público, para `login.html` — hace
 falta ahí porque carga antes de que exista sesión). Sin definirlas, la
 instancia se ve exactamente como la de jA — este mecanismo es aditivo,
-nunca to toca el look por defecto.
+nunca toca el look por defecto.
 
 | Variable | Qué hace |
 |---|---|
