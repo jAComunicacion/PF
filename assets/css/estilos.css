@@ -1945,7 +1945,7 @@ body.client-branded .action-buttons {
 
 body.client-branded .action-btn {
     background: transparent;
-    border-color: transparent;
+    border-color: #fff;
     box-shadow: none;
 }
 
