@@ -29,6 +29,16 @@
 </head>
 
 <body>
+    <!-- Tapa el dashboard hasta que branding + datos reales terminen de
+         cargar (ver initializeApp.js). Sin esto se ve un parpadeo del
+         layout "crudo": sin nombre, sin marca del cliente, en $0.00. -->
+    <div id="app-loader" aria-hidden="true">
+        <div class="app-loader-iso">
+            <span class="app-loader-iso__base"></span>
+            <span class="app-loader-iso__fill"></span>
+        </div>
+    </div>
+
     <div class="app-container">
         <div id="dashboard-screen" class="screen active" data-screen="dashboard">
             <div class="profile-section">

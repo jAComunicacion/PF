@@ -46,34 +46,42 @@ window.refreshData = async function () {
 };
 
 async function initializeApp() {
-    setupNavigationListeners();
-    setupFormListeners();
-    setupActionButtons();
-    if (window.setupListFilters) setupListFilters();
-    if (window.setupBalanceTabs) setupBalanceTabs();
-    if (window.setupChartsTabs) setupChartsTabs();
+    // finally: si algo de acá abajo tira una excepción no prevista, el
+    // cargador se saca igual — la alternativa es una app que queda tapada
+    // para siempre y parece colgada, peor que mostrarla a medio armar.
+    try {
+        setupNavigationListeners();
+        setupFormListeners();
+        setupActionButtons();
+        if (window.setupListFilters) setupListFilters();
+        if (window.setupBalanceTabs) setupBalanceTabs();
+        if (window.setupChartsTabs) setupChartsTabs();
 
-    if (window.setupAuth) setupAuth();
+        if (window.setupAuth) await setupAuth();
 
-    // Siembra las categorías por defecto si la base está vacía. El servidor
-    // decide; acá sólo se dispara.
-    if (window.seedCategories) {
-        await window.seedCategories();
+        // Siembra las categorías por defecto si la base está vacía. El
+        // servidor decide; acá sólo se dispara.
+        if (window.seedCategories) {
+            await window.seedCategories();
+        }
+
+        // Después de sembrar, porque el filtro se arma con lo que hay en
+        // la base.
+        if (window.populateCategoryFilter) {
+            await window.populateCategoryFilter();
+        }
+
+        const dateInput = document.getElementById('transaction-date');
+        if (dateInput) {
+            dateInput.valueAsDate = new Date();
+        }
+
+        await window.refreshData();
+
+        showScreen('dashboard');
+    } finally {
+        document.body.classList.add('app-ready');
     }
-
-    // Después de sembrar, porque el filtro se arma con lo que hay en la base.
-    if (window.populateCategoryFilter) {
-        await window.populateCategoryFilter();
-    }
-
-    const dateInput = document.getElementById('transaction-date');
-    if (dateInput) {
-        dateInput.valueAsDate = new Date();
-    }
-
-    await window.refreshData();
-
-    showScreen('dashboard');
 }
 
 document.addEventListener('DOMContentLoaded', initializeApp);

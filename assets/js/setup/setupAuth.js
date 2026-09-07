@@ -61,7 +61,10 @@ function setupAuth() {
 
     // El nombre se guarda en el servidor junto al resto de los ajustes, así que
     // te saluda igual desde el celular que desde la compu.
-    window.api.getSettings()
+    // Se guarda la promesa (y se retorna al final, no acá) para que
+    // initializeApp la pueda esperar antes de sacar el cargador inicial,
+    // sin que el resto de esta función se vuelva código muerto.
+    const settingsPromise = window.api.getSettings()
         .then(settings => {
             if (!settings) return;
 
@@ -134,6 +137,8 @@ function setupAuth() {
     // corría antes de que llegara el nombre guardado del servidor.
 
     console.log("Sistema de autenticación y perfil local inicializado.");
+
+    return settingsPromise;
 }
 
 window.setupAuth = setupAuth;
