@@ -98,6 +98,21 @@
         say('No se pudo iniciar sesión. Probá de nuevo en un momento.');
     }
 
+    // Marca de agua de jA fuera en instancias de cliente (CSS en login.css).
+    async function applyBranding() {
+        try {
+            const res = await fetch('/api/branding');
+            if (!res.ok) return;
+            const branding = await res.json();
+            if (branding && branding.clientAccentColor) {
+                document.body.classList.add('client-branded');
+            }
+        } catch {
+            // Sin branding no pasa nada: queda el look de jA de siempre.
+        }
+    }
+
     if (form) form.addEventListener('submit', handleSubmit);
     redirectIfAlreadyIn();
+    applyBranding();
 })();

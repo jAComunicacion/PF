@@ -38,6 +38,15 @@ La firma "jA Comunicación" al pie del Dashboard, Transacciones y Gráficas
 (`.brand-mark`) queda siempre, sin importar estas variables — es el colofón
 de marca, no algo que el branding del cliente pueda apagar.
 
+Con `CLIENT_ACCENT_COLOR` definido, el frontend agrega `body.client-branded`
+(en `index.html` vía `/api/settings`, y en `login.html` vía `/api/branding`
+— este último sin auth, hace falta antes de que exista sesión) y activa el
+look "etéreo" del dashboard: degradé de acento en la tarjeta de saldo,
+botones sin caja propia, celeste derivado en el % de Estado de Mis Finanzas
+y la navegación inferior, y se apaga la marca de agua del isotipo en el
+login. Todo vive en bloques `body.client-branded ...` en `estilos.css` /
+`login.css` — sin la variable, cero cambio visual.
+
 ## Marca
 
 Archivos en `assets/logos/`. **El logo nunca se recompone con tipografía** —

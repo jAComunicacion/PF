@@ -76,6 +76,13 @@ body {
     object-fit: contain;
 }
 
+/* Instancia de cliente (CLIENT_ACCENT_COLOR, ver loginPage.js): la
+   marca de agua es firma de jArismendi®, no del cliente — se saca acá y
+   queda solo el fondo sólido. */
+body.client-branded .watermark {
+    display: none;
+}
+
 /* ==================== TARJETA ==================== */
 .login-card {
     position: relative;

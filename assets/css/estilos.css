@@ -1817,3 +1817,89 @@ select {
     opacity: .5;
     cursor: progress;
 }
+
+/* =====================================================================
+   MODO CLIENTE — instancia personalizada (ver README, CLIENT_ACCENT_COLOR)
+   ---------------------------------------------------------------------
+   Se activa solo con body.client-branded (setupAuth.js, cuando la
+   instancia define CLIENT_ACCENT_COLOR). Sin esa variable —tu instancia,
+   y cualquier cliente que todavía no tenga branding propio— nada de este
+   bloque aplica: el dashboard sigue exactamente como está más arriba.
+   ===================================================================== */
+
+/* El degradé etéreo: arranca en el azul intenso de la tarjeta y se
+   desvanece contra el papel antes de "Estado de Mis Finanzas". La tarjeta
+   pierde su propio fondo sólido y el recorte de "papel roto" — el color
+   ahora lo pone este degradé, que se extiende por debajo de la tarjeta
+   para que Pagar/Ingresos queden flotando sobre él, no sobre una caja. */
+body.client-branded .balance-card {
+    background: transparent;
+    box-shadow: none;
+    clip-path: none;
+    overflow: visible;
+}
+
+body.client-branded .hero-wash {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(var(--gut) * -1);
+    right: calc(var(--gut) * -1);
+    height: 460px;
+    background: linear-gradient(180deg,
+            var(--petrol) 0%,
+            var(--petrol-deep) 28%,
+            transparent 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* La marca de agua del isotipo se apaga: sobre un fondo que ya no es un
+   bloque sólido, el trazo fino no se lee y compite con el degradé. */
+body.client-branded .balance-card::before {
+    display: none;
+}
+
+/* Los botones de acción quedan "en el fondo de la app": sin tarjeta
+   blanca propia, con ícono y texto en blanco para leerse sobre el
+   degradé que todavía los cubre a esta altura. */
+body.client-branded .action-buttons {
+    position: relative;
+    z-index: 1;
+}
+
+body.client-branded .action-btn {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+body.client-branded .btn-icon,
+body.client-branded .btn-text {
+    color: #fff;
+}
+
+body.client-branded .action-btn:hover {
+    background: var(--petrol);
+    border-color: var(--petrol);
+    box-shadow: none;
+}
+
+/* Celeste — tinte claro del mismo acento — para el porcentaje de Estado
+   de Mis Finanzas y la navegación inferior (ver setupAuth.js, lightenHex). */
+body.client-branded .health-percentage {
+    color: var(--petrol-light);
+}
+
+body.client-branded .nav-btn,
+body.client-branded .nav-btn:hover {
+    color: var(--petrol-light);
+}
+
+/* La pantalla seleccionada suma un fondo del acento principal detrás del
+   texto celeste, en vez de solo el filete superior de siempre. */
+body.client-branded .nav-btn.active {
+    color: var(--petrol-light);
+    background: var(--petrol);
+    border-radius: var(--radius) var(--radius) 0 0;
+}

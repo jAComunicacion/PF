@@ -24,6 +24,18 @@ function darkenHex(hex, factor) {
     return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
 }
 
+// Aclara un hex mezclándolo con blanco — el "celeste" del porcentaje de
+// Estado de Finanzas y de la navegación inferior sale del mismo acento,
+// no de un color inventado aparte.
+function lightenHex(hex, factor) {
+    const n = parseInt(hex.replace('#', ''), 16);
+    const mix = c => Math.round(c * factor + 255 * (1 - factor));
+    const r = mix((n >> 16) & 255);
+    const g = mix((n >> 8) & 255);
+    const b = mix(n & 255);
+    return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
+}
+
 window.auth = {
     currentUser: defaultUser,
     onAuthStateChanged: async (callback) => {
@@ -68,6 +80,13 @@ function setupAuth() {
                 root.setProperty('--income', settings.clientAccentColor);
                 root.setProperty('--petrol-deep', darkenHex(settings.clientAccentColor, 0.63));
                 root.setProperty('--petrol-ink', darkenHex(settings.clientAccentColor, 0.43));
+                root.setProperty('--petrol-light', lightenHex(settings.clientAccentColor, 0.55));
+
+                // Activa el look "etéreo" del dashboard y la navegación de
+                // esta instancia (ver estilos.css, bloque body.client-branded).
+                // La instancia de jA no lleva esta clase, así que sigue
+                // exactamente igual que antes.
+                document.body.classList.add('client-branded');
             }
 
             if (settings.clientLogoUrl) {
