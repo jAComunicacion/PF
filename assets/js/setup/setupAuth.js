@@ -1,13 +1,16 @@
 // Local Auth & Profile Management
 // Handles user identity (mock) and persistent profile settings (Name/Photo)
 
-// El nombre por defecto es el del dueño de la app, que hoy es un solo usuario.
-// La costura para terceros ya existe y no hay que tocar nada acá: el ajuste
-// `userName` guardado en el servidor pisa este valor, y se edita tocando el
-// saludo. Cuando la app sea multiusuario, cada cuenta trae el suyo.
+// Sin nombre por defecto a propósito: esto es un solo código para todas
+// las instancias (la de Julio y la de cada cliente), así que un nombre
+// hardcodeado ("Julio") saludaría mal a cualquier otro cliente en el
+// instante entre el primer pintado y que /api/settings responda. El
+// nombre real llega de `userName` (ajuste propio, se edita tocando el
+// saludo) o de `clientName` (branding de la instancia, ver README) — hasta
+// que uno de los dos llega, el saludo queda sin nombre ("¡Hola!").
 const defaultUser = {
     uid: "local-user-v1",
-    displayName: "Julio",
+    displayName: "",
     photoURL: "assets/logos/jacomunicacion.jpg",
     email: "local@app.com"
 };
@@ -50,6 +53,12 @@ function setupAuth() {
     const nameSpan = document.getElementById('user-name');
     const profileImgEl = document.getElementById('profile-img');
 
+    // La coma vive acá, no en el HTML: así "¡Hola!" (sin nombre todavía)
+    // no le queda una coma colgando.
+    function paintName(name) {
+        if (nameSpan) nameSpan.textContent = name ? `, ${name}` : '';
+    }
+
     // El nombre se guarda en el servidor junto al resto de los ajustes, así que
     // te saluda igual desde el celular que desde la compu.
     window.api.getSettings()
@@ -61,10 +70,10 @@ function setupAuth() {
             // defecto de una instancia recién entregada a un cliente.
             if (settings.userName) {
                 defaultUser.displayName = settings.userName;
-                if (nameSpan) nameSpan.textContent = settings.userName;
+                paintName(settings.userName);
             } else if (settings.clientName) {
                 defaultUser.displayName = settings.clientName;
-                if (nameSpan) nameSpan.textContent = settings.clientName;
+                paintName(settings.clientName);
             }
 
             if (settings.clientName) {
@@ -97,7 +106,7 @@ function setupAuth() {
         .catch(() => { /* refreshData ya avisa si el servidor no responde */ });
 
     // Load initial state
-    if (nameSpan) nameSpan.textContent = defaultUser.displayName;
+    paintName(defaultUser.displayName);
     if (profileImgEl) profileImgEl.src = defaultUser.photoURL;
 
     // Allow editing name by clicking the greeting
@@ -107,7 +116,7 @@ function setupAuth() {
             if (newName && newName.trim() !== "") {
                 // Update UI
                 defaultUser.displayName = newName;
-                if (nameSpan) nameSpan.textContent = newName;
+                paintName(newName);
 
                 try {
                     await window.api.putSetting('userName', newName);
