@@ -17,6 +17,12 @@ module.exports = async function handler(req, res) {
         const settings = {};
         for (const row of rows) settings[row.key] = row.value;
 
+        // Branding por instancia (modelo "instancia por cliente", ver README):
+        // no se guarda en la base, viene del deploy de cada cliente.
+        if (process.env.CLIENT_NAME) settings.clientName = process.env.CLIENT_NAME;
+        if (process.env.CLIENT_ACCENT_COLOR) settings.clientAccentColor = process.env.CLIENT_ACCENT_COLOR;
+        if (process.env.CLIENT_LOGO_URL) settings.clientLogoUrl = process.env.CLIENT_LOGO_URL;
+
         res.status(200).json(settings);
         return;
     }

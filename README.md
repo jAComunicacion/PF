@@ -25,6 +25,19 @@ A partir de Fase 1 (ingesta por email) se suman:
 | `IMAP_PASSWORD` | Contraseña de esa casilla | Panel de Ferozo |
 | `INGEST_TOKEN` | Autoriza al cron a disparar la ingesta | `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"` |
 
+Opcionales — branding por instancia (modelo "instancia por cliente", ver más
+abajo). Sin definirlas, la app se ve igual que hoy (marca jArismendi®):
+
+| Variable | Para qué sirve |
+|---|---|
+| `CLIENT_NAME` | Nombre del cliente: saludo por defecto y título de la pestaña |
+| `CLIENT_ACCENT_COLOR` | Hex que reemplaza el verde petróleo (`--petrol`/`--income`) — botones, header, barra de presupuesto, gráficos |
+| `CLIENT_LOGO_URL` | Ruta/URL del logo del cliente, reemplaza el placeholder de avatar de perfil |
+
+La firma "jA Comunicación" al pie del Dashboard, Transacciones y Gráficas
+(`.brand-mark`) queda siempre, sin importar estas variables — es el colofón
+de marca, no algo que el branding del cliente pueda apagar.
+
 ## Marca
 
 Archivos en `assets/logos/`. **El logo nunca se recompone con tipografía** —
@@ -36,6 +49,11 @@ marca usa uno de estos archivos:
 | `IsoLogojAComunicacion.png` | Isotipo en **outline** blanco, fondo transparente | Marcas de agua sobre fondos oscuros (hoy: tarjeta de saldo) |
 | `jacomunicacion.jpg` | Isotipo sólido, blanco sobre verde petróleo | Versión principal — favicon, ícono de app, avatar |
 | `LogusjAComunicacion.png` | Logotipo horizontal "jA Comunicacion" | Firmas, encabezados de documentos, export PDF |
+
+Los logos de cliente (para `CLIENT_LOGO_URL`) también viven en
+`assets/logos/`, con el nombre del cliente (ej. `miriam-schild-logo.png`) —
+son archivos propios del cliente, no de jArismendi®, y solo se activan si
+la instancia define esa variable.
 
 ## Base de datos
 
@@ -106,6 +124,8 @@ Checklist, en orden:
      Neon nuevo), `APP_PASSWORD` (contraseña propia del cliente, no
      reusar la de otro), `SESSION_SECRET` (generar uno nuevo, ver tabla de
      variables más arriba — nunca reusar el de otra instancia).
+   - Opcional: `CLIENT_NAME`, `CLIENT_ACCENT_COLOR`, `CLIENT_LOGO_URL`
+     para el branding liviano de esa instancia (ver tabla más arriba).
 
 3. **Dominio**
    - Subdominio bajo el dominio de jA: `<cliente>.jacomunicacion.com.ar`

@@ -12,6 +12,18 @@ const defaultUser = {
     email: "local@app.com"
 };
 
+// Oscurece un hex multiplicando cada canal — misma relación que ya existe
+// entre --petrol/--petrol-deep/--petrol-ink en estilos.css (~63% y ~43%
+// del valor original), para que el acento de marca del cliente cascadee
+// también a la tarjeta de saldo y no se quede solo en botones.
+function darkenHex(hex, factor) {
+    const n = parseInt(hex.replace('#', ''), 16);
+    const r = Math.round(((n >> 16) & 255) * factor);
+    const g = Math.round(((n >> 8) & 255) * factor);
+    const b = Math.round((n & 255) * factor);
+    return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
+}
+
 window.auth = {
     currentUser: defaultUser,
     onAuthStateChanged: async (callback) => {
@@ -30,9 +42,37 @@ function setupAuth() {
     // te saluda igual desde el celular que desde la compu.
     window.api.getSettings()
         .then(settings => {
-            if (settings && settings.userName) {
+            if (!settings) return;
+
+            // El nombre propio del usuario (userName) siempre pisa el de
+            // marca (clientName): este último es solo el saludo por
+            // defecto de una instancia recién entregada a un cliente.
+            if (settings.userName) {
                 defaultUser.displayName = settings.userName;
                 if (nameSpan) nameSpan.textContent = settings.userName;
+            } else if (settings.clientName) {
+                defaultUser.displayName = settings.clientName;
+                if (nameSpan) nameSpan.textContent = settings.clientName;
+            }
+
+            if (settings.clientName) {
+                document.title = `${settings.clientName} · Personal Count`;
+            }
+
+            // Un solo color de acento cascadea por botones, header, barra
+            // de presupuesto y primer color del gráfico sin tocar el resto
+            // del sistema de diseño de jArismendi®.
+            if (settings.clientAccentColor) {
+                const root = document.documentElement.style;
+                root.setProperty('--petrol', settings.clientAccentColor);
+                root.setProperty('--income', settings.clientAccentColor);
+                root.setProperty('--petrol-deep', darkenHex(settings.clientAccentColor, 0.63));
+                root.setProperty('--petrol-ink', darkenHex(settings.clientAccentColor, 0.43));
+            }
+
+            if (settings.clientLogoUrl) {
+                defaultUser.photoURL = settings.clientLogoUrl;
+                if (profileImgEl) profileImgEl.src = settings.clientLogoUrl;
             }
         })
         .catch(() => { /* refreshData ya avisa si el servidor no responde */ });

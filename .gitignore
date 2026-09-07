@@ -15,3 +15,6 @@ import_*.sql
 
 # Capturas del driver de /run-personal-count: se regeneran en cada corrida.
 .claude/skills/run-personal-count/screenshots/
+
+.vercel
+.env*
